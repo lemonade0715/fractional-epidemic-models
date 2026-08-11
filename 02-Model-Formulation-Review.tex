@@ -1,0 +1,525 @@
+% !TeX root = 00-main.tex
+\documentclass[00-main.tex]{subfiles}
+
+\begin{document}
+
+\section{Model Formulation Review}
+
+This section provides a concise overview of the fractional epidemic models reviewed by \cite{Ch21}.
+
+
+\subsection{Dengue epidemics: fractional SIR--SI model}
+
+Dengue is a mosquito-borne viral disease transmitted primarily by infected \textit{Aedes} mosquitoes.
+Because transmission occurs in both directions between humans and mosquitoes, a host--vector model must track the epidemic states of the two populations simultaneously.
+Humans may recover and acquire immunity, whereas an infected mosquito is generally assumed to remain infectious for life; this motivates an SIR structure for humans coupled to an SI structure for mosquitoes \cite{WHO09}.
+
+Let $S_h(t)$, $I_h(t)$, and $R_h(t)$ denote the susceptible, infectious, and recovered human populations, with
+\[
+    N_h=S_h+I_h+R_h.
+\]
+Similarly, let $S_m(t)$ and $I_m(t)$ denote the susceptible and infectious mosquito populations, with
+\[ N_m=S_m+I_m. \]
+The classical model summarized in \cite{Ch21} and used as the starting point in \cite{PRT11} is
+\[
+\begin{cases}
+    \displaystyle
+    \frac{dS_h}{dt}
+    =\mu_hN_h-
+      \left(B\beta_{mh}\frac{I_m}{N_h}+\mu_h\right)S_h, \\[8pt]
+    \displaystyle
+    \frac{dI_h}{dt}
+    =B\beta_{mh}\frac{I_m}{N_h}S_h-(\eta_h+\mu_h)I_h, \\[8pt]
+    \displaystyle
+    \frac{dR_h}{dt}
+    =\eta_hI_h-\mu_hR_h, \\[8pt]
+    \displaystyle
+    \frac{dS_m}{dt}
+    =\mu_mN_m-
+      \left(B\beta_{hm}\frac{I_h}{N_h}+\mu_m\right)S_m, \\[8pt]
+    \displaystyle
+    \frac{dI_m}{dt}
+    =B\beta_{hm}\frac{I_h}{N_h}S_m-\mu_mI_m.
+\end{cases}
+\]
+Here $B$ is the average number of bites per mosquito per unit time, $\beta_{mh}$ and $\beta_{hm}$ are the transmission probabilities per bite from mosquitoes to humans and from humans to mosquitoes, respectively, $\eta_h$ is the human recovery rate, and $\mu_h$ and $\mu_m$ are the human and mosquito demographic rates.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    compartment/.style={
+        circle,
+        draw,
+        thick,
+        minimum size=12mm,
+        inner sep=1pt
+    },
+    human/.style={compartment,fill=blue!8},
+    mosquito/.style={compartment,fill=green!10},
+    flow/.style={-{Stealth[length=2.2mm]},thick},
+    loss/.style={-{Stealth[length=2mm]},thin},
+    every node/.style={font=\small}
+]
+    \node[human] (Sh) at (0,1.5) {$S_h$};
+    \node[human] (Ih) at (4,1.5) {$I_h$};
+    \node[human] (Rh) at (8,1.5) {$R_h$};
+
+    \node[mosquito] (Sm) at (2,-1.4) {$S_m$};
+    \node[mosquito] (Im) at (6,-1.4) {$I_m$};
+
+    \node[font=\small\bfseries] at (4,2.9) {Human population};
+    \node[font=\small\bfseries] at (4,-2.9) {Mosquito population};
+
+    \draw[flow] (Sh) -- node[above] {
+        $\displaystyle B\beta_{mh}\frac{I_m}{N_h}S_h$
+    } (Ih);
+    \draw[flow] (Ih) -- node[above] {$\eta_h I_h$} (Rh);
+
+    \draw[flow] (Sm) -- node[above] {
+        $\displaystyle B\beta_{hm}\frac{I_h}{N_h}S_m$
+    } (Im);
+
+    \draw[flow] (-1.8,1.5) -- node[above] {$\mu_hN_h$} (Sh);
+    \draw[flow] (0.2,-1.4) -- node[above] {$\mu_mN_m$} (Sm);
+
+    \draw[loss] (Sh) -- node[left] {$\mu_hS_h$} (0,2.65);
+    \draw[loss] (Ih) -- node[left] {$\mu_hI_h$} (4,2.65);
+    \draw[loss] (Rh) -- node[right] {$\mu_hR_h$} (8,2.65);
+    \draw[loss] (Sm) -- node[left] {$\mu_mS_m$} (2,-2.55);
+    \draw[loss] (Im) -- node[right] {$\mu_mI_m$} (6,-2.55);
+\end{tikzpicture}
+\caption{Compartmental structure of the classical dengue SIR--SI model. Blue nodes represent the human population and green nodes represent the mosquito population.}
+\label{fig:dengue-sir-si}
+\end{figure}
+
+In \cite{PRT11}, all first-order derivatives are replaced by Riemann--Liouville derivatives of a common order $0<\alpha\leq1$. The corresponding fractional model is
+\[
+\begin{cases}
+    \displaystyle
+    {}_{\phantom{R}0}^{\mathrm{RL}}\!D_t^\alpha S_h
+    =\mu_hN_h-
+      \left(B\beta_{mh}\frac{I_m}{N_h}+\mu_h\right)S_h, \\[1ex]
+    \displaystyle
+    {}_{\phantom{R}0}^{\mathrm{RL}}\!D_t^\alpha I_h
+    =B\beta_{mh}\frac{I_m}{N_h}S_h-(\eta_h+\mu_h)I_h, \\[1ex]
+    \displaystyle
+    {}_{\phantom{R}0}^{\mathrm{RL}}\!D_t^\alpha R_h
+    =\eta_hI_h-\mu_hR_h, \\[1ex]
+    \displaystyle
+    {}_{\phantom{R}0}^{\mathrm{RL}}\!D_t^\alpha S_m
+    =\mu_mN_m-
+      \left(B\beta_{hm}\frac{I_h}{N_h}+\mu_m\right)S_m, \\[1ex]
+    \displaystyle
+    {}_{\phantom{R}0}^{\mathrm{RL}}\!D_t^\alpha I_m
+    =B\beta_{hm}\frac{I_h}{N_h}S_m-\mu_mI_m.
+\end{cases}
+\]
+The compartment structure and transition terms are unchanged; the only formal modification is the replacement of the local first-order derivatives by nonlocal fractional derivatives. The classical model is recovered as $\alpha\to1$.
+Questions concerning the dimensions of the unchanged parameters and the interpretation of this direct replacement will be discussed separately.
+
+As reviewed in \cite{Ch21}, subsequent studies extended this basic fractional SIR--SI formulation in several directions.
+Later models replaced the common Riemann--Liouville order with Caputo derivatives and allowed the human and mosquito populations to evolve with different fractional orders.
+Other developments addressed dimensional consistency, incorporated the aquatic stages of the mosquito life cycle, introduced multiple fractional orders or multi-term derivatives, and allowed entomological parameters to depend on temperature.
+These extensions show that the fractionalization of a dengue model is not a unique operation: the choice of derivative, fractional orders, parameter scaling, and compartmental structure must all be justified separately.
+
+
+\subsection{Leptospirosis epidemics: fractional SIR--SI model}
+
+Leptospirosis is a bacterial zoonosis transmitted through direct contact with infected animals or through soil and water contaminated by their urine.
+Occupational and recreational exposure to contaminated water therefore plays an important role in transmission.
+Because humans can be infected by an animal reservoir while infection also circulates within the human population, the model reviewed in \cite{Ch21} couples a human SIR system to a vector SI system.
+
+Let $S^h$, $I^h$, and $R^h$ denote susceptible, infectious, and recovered humans, and let $S^v$ and $I^v$ denote susceptible and infectious vectors. The classical model is
+\[
+\begin{cases}
+ \dfrac{dS^h}{dt}=b_1-\mu_hS^h-\beta_2S^hI^v-\beta_1S^hI^h+\lambda_hR^h,\\[8pt]
+ \dfrac{dI^h}{dt}=\beta_2S^hI^v+\beta_1S^hI^h-(\mu_h+\delta_h+\gamma_h)I^h,\\[8pt]
+ \dfrac{dR^h}{dt}=\gamma_hI^h-(\mu_h+\lambda_h)R^h,\\[8pt]
+ \dfrac{dS^v}{dt}=b_2-\gamma_vS^v-\beta_3S^vI^h,\\[8pt]
+ \dfrac{dI^v}{dt}=\beta_3S^vI^h-(\gamma_v+\delta_v)I^v.
+\end{cases}
+\]
+Here $b_1$ and $b_2$ are recruitment rates, $\beta_1$ describes human-to-human transmission, and $\beta_2$ and $\beta_3$ couple the human and vector populations. The parameters $\gamma_h$ and $\lambda_h$ describe recovery and loss of immunity, while $\mu_h$, $\gamma_v$, $\delta_h$, and $\delta_v$ account for natural or disease-induced mortality as specified in the model.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    compartment/.style={circle,draw,thick,minimum size=12mm,inner sep=1pt},
+    human/.style={compartment,fill=blue!8},
+    vector/.style={compartment,fill=green!10},
+    flow/.style={-{Stealth[length=2.2mm]},thick},
+    loss/.style={-{Stealth[length=2mm]},thin},
+    every node/.style={font=\small}
+]
+ \node[human] (Sh) at (0,1.5) {$S^h$};
+ \node[human] (Ih) at (4,1.5) {$I^h$};
+ \node[human] (Rh) at (8,1.5) {$R^h$};
+ \node[vector] (Sv) at (2,-1.4) {$S^v$};
+ \node[vector] (Iv) at (6,-1.4) {$I^v$};
+
+ \node[font=\small\bfseries] at (4,2.9) {Human population};
+ \node[font=\small\bfseries] at (4,-2.9) {Vector population};
+
+ \draw[flow] (Sh)--node[above]{$\beta_1S^hI^h+\beta_2S^hI^v$}(Ih);
+ \draw[flow] (Ih)--node[above]{$\gamma_hI^h$}(Rh);
+ \draw[flow] (Rh) to[bend left=28] node[below]{$\lambda_hR^h$}(Sh);
+ \draw[flow] (Sv)--node[above]{$\beta_3S^vI^h$}(Iv);
+
+ \draw[flow] (-1.8,1.5)--node[above]{$b_1$}(Sh);
+ \draw[flow] (0.2,-1.4)--node[above]{$b_2$}(Sv);
+ \draw[loss] (Sh)--node[left]{$\mu_hS^h$}(0,2.65);
+ \draw[loss] (Ih)--node[left]{$(\mu_h+\delta_h)I^h$}(4,2.65);
+ \draw[loss] (Rh)--node[right]{$\mu_hR^h$}(8,2.65);
+ \draw[loss] (Sv)--node[left]{$\gamma_vS^v$}(2,-2.55);
+ \draw[loss] (Iv)--node[right]{$(\gamma_v+\delta_v)I^v$}(6,-2.55);
+\end{tikzpicture}
+\caption{Compartmental structure of the classical leptospirosis SIR--SI model. Blue nodes represent the human population and green nodes represent the vector population.}
+\label{fig:leptospirosis-sir-si}
+\end{figure}
+
+The fractional formulation summarized in \cite{Ch21} replaces the five first-order derivatives by Caputo derivatives of a common order $0<\alpha\leq1$:
+\[
+\begin{cases}
+ {}_{0}^{\mathrm C}\!D_t^\alpha S^h=b_1-\mu_hS^h-\beta_2S^hI^v-\beta_1S^hI^h+\lambda_hR^h,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha I^h=\beta_2S^hI^v+\beta_1S^hI^h-(\mu_h+\delta_h+\gamma_h)I^h,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha R^h=\gamma_hI^h-(\mu_h+\lambda_h)R^h,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha S^v=b_2-\gamma_vS^v-\beta_3S^vI^h,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha I^v=\beta_3S^vI^h-(\gamma_v+\delta_v)I^v.
+\end{cases}
+\]
+Thus the transition structure is retained and the integer-order model is recovered at $\alpha=1$.
+
+
+\subsection{Salmonella bacterial infection: fractional SIRC model}
+
+Salmonellosis is a zoonotic bacterial infection commonly associated with contaminated food and animal reservoirs.
+In an animal herd, recovery need not move an individual immediately from full immunity back to full susceptibility.
+The SIRC model therefore introduces a cross-immune class $C$, representing an intermediate state with partial and temporary protection \cite{Ch21,Rihan14}.
+
+For herd size $N=S+I+R+C$, the classical model is
+\[
+\begin{cases}
+ \dfrac{dS}{dt}=\mu N+\eta C-(\beta I+\mu)S,\\[8pt]
+ \dfrac{dI}{dt}=\beta SI+\sigma\beta CI-(\theta+m+\mu)I,\\[8pt]
+ \dfrac{dR}{dt}=(1-\sigma)\beta CI+\theta I-(\mu+\delta)R,\\[8pt]
+ \dfrac{dC}{dt}=\delta R-\beta CI-(\eta+\mu)C.
+\end{cases}
+\]
+Here $\beta$ is the transmission rate, $\mu$ is both the per-capita birth and natural mortality rate, and $m$ is disease-induced mortality.
+The quantities $\theta^{-1}$, $\delta^{-1}$, and $\eta^{-1}$ represent the infectious, immune, and cross-immune time scales, respectively, while $\sigma$ determines the portion of reinfected cross-immune animals entering $I$ directly.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    compartment/.style={circle,draw,thick,minimum size=12mm,inner sep=1pt,fill=blue!8},
+    flow/.style={-{Stealth[length=2.2mm]},thick},
+    loss/.style={-{Stealth[length=2mm]},thin},
+    every node/.style={font=\small}
+]
+ \node[compartment] (S) at (0,0) {$S$};
+ \node[compartment] (I) at (3,0) {$I$};
+ \node[compartment] (R) at (6,0) {$R$};
+ \node[compartment] (C) at (9,0) {$C$};
+
+ \draw[flow] (S)--node[above]{$\beta SI$}(I);
+ \draw[flow] (I)--node[above]{$\theta I$}(R);
+ \draw[flow] (R)--node[above]{$\delta R$}(C);
+ \draw[flow] (C) .. controls (7.8,1.45) and (4.2,1.45) ..
+     node[above]{$\sigma\beta CI$}(I);
+ \draw[flow] (C) to[bend left=35]
+     node[pos=.48,below=4pt,fill=white,inner sep=1.5pt]{$(1-\sigma)\beta CI$}(R);
+ \draw[flow] (C) .. controls (7,-1.75) and (2,-1.75) ..
+     node[below]{$\eta C$}(S);
+
+ \draw[flow] (-1.6,0)--node[above]{$\mu N$}(S);
+ \draw[loss] (S)--node[left]{$\mu S$}(0,1.15);
+ \draw[loss] (I)--node[left]{$(\mu+m)I$}(3,1.15);
+ \draw[loss] (R)--node[left]{$\mu R$}(6,1.15);
+ \draw[loss] (C)--node[right]{$\mu C$}(9,1.15);
+\end{tikzpicture}
+\caption{Compartmental structure of the classical Salmonella SIRC model, including recruitment, mortality, temporary cross-immunity, and reinfection.}
+\label{fig:salmonella-sirc}
+\end{figure}
+
+Writing $s=S/N$, $i=I/N$, $r=R/N$, and $c=C/N$, the fractional model in \cite{Rihan14} assigns a possibly different Caputo order to each compartment:
+\[
+\begin{cases}
+ {}_{0}^{\mathrm C}\!D_t^{\alpha_1}s=\mu+\eta c-(\beta i+\mu)s,\\
+ {}_{0}^{\mathrm C}\!D_t^{\alpha_2}i=\beta si+\sigma\beta ci-(\theta+m+\mu)i,\\
+ {}_{0}^{\mathrm C}\!D_t^{\alpha_3}r=(1-\sigma)\beta ci+\theta i-(\mu+\delta)r,\\
+ {}_{0}^{\mathrm C}\!D_t^{\alpha_4}c=\delta r-\beta ci-(\eta+\mu)c.
+\end{cases}
+\]
+Allowing distinct orders $\alpha_j$ gives the four epidemiological states different effective memory scales; setting every $\alpha_j=1$ returns the normalized classical model.
+
+\subsection{H1N1 epidemics: fractional SEIR model}
+
+Influenza A(H1N1) has an incubation period during which an infected person has not yet entered the fully infectious class. An exposed compartment is therefore added between susceptibility and infectiousness, producing an SEIR model. The formulation below uses population fractions, so $S+E+I+R=1$, and assumes equal birth and natural-death rates so that the total population remains constant \cite{Ch21,Parra14}.
+
+The classical system is
+\[
+\begin{cases}
+ \dfrac{dS}{dt}=\mu-\beta SI-\mu S,\\[5pt]
+ \dfrac{dE}{dt}=\beta SI-(\mu+\Omega)E,\\[5pt]
+ \dfrac{dI}{dt}=\Omega E-(\mu+\rho)I,\\[5pt]
+ \dfrac{dR}{dt}=\rho I-\mu R.
+\end{cases}
+\]
+Here $\beta$ is the effective-contact rate, $\Omega$ is the progression rate from exposed to infectious, $\rho$ is the recovery rate, and $\mu$ is the demographic rate.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=25mm]
+ \node[epi compartment] (S) {$S$};
+ \node[epi compartment,right=of S] (E) {$E$};
+ \node[epi compartment,right=of E] (I) {$I$};
+ \node[epi compartment,right=of I] (R) {$R$};
+ \draw[epi flow] (S)--node[epi label,above]{$\beta SI$}(E);
+ \draw[epi flow] (E)--node[epi label,above]{$\Omega E$}(I);
+ \draw[epi flow] (I)--node[epi label,above]{$\rho I$}(R);
+ \draw[epi flow] ([xshift=-13mm]S.west)--node[epi label,above]{$\mu$}(S);
+ \foreach \x in {S,E,I,R}{\draw[epi loss] (\x)--++(0,-10mm) node[epi label,below]{$\mu\x$};}
+\end{tikzpicture}
+\caption{Compartmental structure of the population-scaled H1N1 SEIR model.}
+\label{fig:h1n1-seir}
+\end{figure}
+
+In \cite{Parra14}, the corresponding Caputo model is written with the rate parameters raised to the power $\alpha$:
+\[
+\begin{cases}
+ {}_{0}^{\mathrm C}\!D_t^\alpha S=\mu^\alpha-\beta^\alpha SI-\mu^\alpha S,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha E=\beta^\alpha SI-(\mu^\alpha+\Omega^\alpha)E,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha I=\Omega^\alpha E-(\mu^\alpha+\rho^\alpha)I,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha R=\rho^\alpha I-\mu^\alpha R.
+\end{cases}
+\]
+This convention keeps the terms dimensionally compatible with a derivative of order $\alpha$. The authors fitted $\alpha$ together with the epidemiological parameters and reported that the fractional model reproduced the observed epidemic peak more closely than its integer-order counterpart \cite{Parra14}.
+
+\subsection{Measles epidemics: fractional SEIR model}
+
+Measles is a highly contagious viral disease with a distinct incubation period, making the SEIR structure natural. Let $S$, $E$, $I$, and $R$ be population fractions and let $\beta(t)$ allow the effective contact rate to vary in time, for example because of seasonal mixing. Births enter $S$ at rate $b$, $\mu$ is the natural mortality rate, $\sigma^{-1}$ is the mean incubation period, and $\zeta^{-1}$ is the mean infectious period \cite{Ch21,Goufo14}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=25mm]
+ \node[epi compartment] (S) {$S$};
+ \node[epi compartment,right=of S] (E) {$E$};
+ \node[epi compartment,right=of E] (I) {$I$};
+ \node[epi compartment,right=of I] (R) {$R$};
+ \draw[epi flow] (S)--node[epi label,above]{$\beta(t)SI$}(E);
+ \draw[epi flow] (E)--node[epi label,above]{$\sigma E$}(I);
+ \draw[epi flow] (I)--node[epi label,above]{$\zeta I$}(R);
+ \draw[epi flow] ([xshift=-13mm]S.west)--node[epi label,above]{$b$}(S);
+ \foreach \x in {S,E,I,R}{\draw[epi loss] (\x)--++(0,-10mm) node[epi label,below]{$\mu\x$};}
+\end{tikzpicture}
+\caption{Compartmental structure of the measles SEIR model with time-dependent transmission.}
+\label{fig:measles-seir}
+\end{figure}
+
+The review presents the model directly in fractional form:
+\[
+\begin{cases}
+ {}_{0}^{\mathrm C}\!D_t^\alpha S=b-(\beta(t)I+\mu)S,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha E=\beta(t)SI-(\sigma+\mu)E,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha I=\sigma E-(\zeta+\mu)I,\\
+ {}_{0}^{\mathrm C}\!D_t^\alpha R=\zeta I-\mu R.
+\end{cases}
+\]
+Its classical counterpart is obtained by setting $\alpha=1$, namely by replacing every Caputo derivative on the left by the corresponding first-order derivative while leaving the right-hand sides unchanged. This is therefore a direct fractionalization of the temporal SEIR dynamics, with the classical flow structure preserved exactly.
+
+\subsection{Anti-SARS vaccination: fractional SVEIR model}
+
+The 2003 severe acute respiratory syndrome outbreak motivated models that could assess the potential impact of an imperfect vaccine. An SVEIR model separates susceptible $S$, vaccinated $V$, exposed $E$, infectious $I$, and recovered $R$ individuals; the exposed class represents the delay between infection and symptomatic infectiousness, while $V$ permits breakthrough infection \cite{Ch21,Gumel06}.
+
+A classical population model reviewed in \cite{Ch21} is
+\[
+\begin{cases}
+ \dfrac{dS}{dt}=\Pi-\beta SI-\xi S-\mu S,\\[5pt]
+ \dfrac{dV}{dt}=\xi S-(1-\tau)\beta VI-\mu V,\\[5pt]
+ \dfrac{dE}{dt}=\beta SI+(1-\tau)\beta VI-(\alpha+\mu)E,\\[5pt]
+ \dfrac{dI}{dt}=\alpha E-(\delta+d+\mu)I,\\[5pt]
+ \dfrac{dR}{dt}=\delta I-\mu R.
+\end{cases}
+\]
+Here $\Pi$ is recruitment, $\xi$ is vaccination, $\tau$ measures vaccine protection against infection, $\alpha$ is progression from $E$ to $I$, $\delta$ is recovery, and $\mu$ and $d$ are natural and disease-induced mortality.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=20mm and 23mm]
+ \node[epi compartment] (S) {$S$};
+ \node[epi compartment,right=of S] (E) {$E$};
+ \node[epi compartment,right=of E] (I) {$I$};
+ \node[epi compartment,right=of I] (R) {$R$};
+ \node[epi compartment,below=15mm of S] (V) {$V$};
+ \draw[epi flow] (S)--node[epi label,above]{$\beta SI$}(E);
+ \draw[epi flow] (S)--node[epi label,left]{$\xi S$}(V);
+ \draw[epi flow] (V) to[bend right=18] node[epi label,below]{$(1-\tau)\beta VI$}(E);
+ \draw[epi flow] (E)--node[epi label,above]{$\alpha E$}(I);
+ \draw[epi flow] (I)--node[epi label,above]{$\delta I$}(R);
+ \draw[epi flow] ([xshift=-13mm]S.west)--node[epi label,above]{$\Pi$}(S);
+\end{tikzpicture}
+\caption{Compartmental structure of the classical anti-SARS SVEIR vaccination model.}
+\label{fig:sars-sveir}
+\end{figure}
+
+The fractional SVEIR example cited by the review is formulated for a continuous reactor rather than obtained by merely replacing the derivatives in the preceding population model \cite{Hajji19}:
+\[
+\begin{cases}
+ {}_{0}^{\mathrm C}\!D_t^\nu S=D(S_{\mathrm{in}}-S)-(m_S+p)S-\mu(I)S,\\
+ {}_{0}^{\mathrm C}\!D_t^\nu V=pS-(D+m_V)V-\theta\mu(I)V,\\
+ {}_{0}^{\mathrm C}\!D_t^\nu E=\mu(I)(S+\theta V)-(D+m_E+\varepsilon)E,\\
+ {}_{0}^{\mathrm C}\!D_t^\nu I=\varepsilon E-(D+m_I+\gamma)I,\\
+ {}_{0}^{\mathrm C}\!D_t^\nu R=\gamma I-(D+m_R)R.
+\end{cases}
+\]
+Here $p$ is the vaccination rate, $\theta$ reduces infection after vaccination, $\varepsilon^{-1}$ and $\gamma^{-1}$ are the mean latent and infectious durations, and $\mu(I)$ is a saturated incidence function. The symbol $\nu$ is used here for the fractional order to avoid confusing it with the progression rate $\alpha$ in the classical system. Because the two models use different settings and parameterizations, this subsection should be read as a comparison of two SVEIR formulations, not as a term-by-term before-and-after replacement.
+
+\subsection{HIV/AIDS epidemics: fractional SIJA model}
+
+HIV infection can remain asymptomatic for years, progress to a symptomatic infectious stage, and eventually develop into AIDS. The SIJA model consequently divides the population into susceptible individuals $S$, asymptomatic infected individuals $I$, symptomatic infected individuals $J$, and individuals with AIDS $A$ \cite{Ch21,Javidi13}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=25mm]
+ \node[epi compartment] (S) {$S$};
+ \node[epi compartment,right=of S] (I) {$I$};
+ \node[epi compartment,right=of I] (J) {$J$};
+ \node[epi compartment,right=of J] (A) {$A$};
+ \draw[epi flow] (S)--node[epi label,above]{$c\beta(1+bJ)S$}(I);
+ \draw[epi flow] (I)--node[epi label,above]{$k_1I$}(J);
+ \draw[epi flow] (J)--node[epi label,above]{$k_2J$}(A);
+ \draw[epi return] (J) to node[epi label,below]{$\gamma J$}(I);
+ \draw[epi flow] ([xshift=-13mm]S.west)--node[epi label,above]{$\mu K$}(S);
+ \foreach \x in {S,I,J}{\draw[epi loss] (\x)--++(0,-10mm) node[epi label,below]{$\mu\x$};}
+ \draw[epi loss] (A)--++(0,-10mm) node[epi label,below]{$(\mu+d)A$};
+\end{tikzpicture}
+\caption{Compartmental structure of the HIV/AIDS SIJA model with staged progression and treatment.}
+\label{fig:hiv-sija}
+\end{figure}
+
+The model displayed in the review is already fractional:
+\[
+\begin{cases}
+ {}_{0}^{\mathrm{RL}}\!D_t^\alpha S=\mu K-c\beta(1+bJ)S-\mu S,\\
+ {}_{0}^{\mathrm{RL}}\!D_t^\alpha I=c\beta(1+bJ)S-(\mu+k_1)I+\gamma J,\\
+ {}_{0}^{\mathrm{RL}}\!D_t^\alpha J=k_1I-(\mu+k_2+\gamma)J,\\
+ {}_{0}^{\mathrm{RL}}\!D_t^\alpha A=k_2J-(\mu+d)A.
+\end{cases}
+\]
+Here $\mu K$ is recruitment, $c$ is the contact rate, $\beta$ and $b\beta$ are the per-contact transmission probabilities associated with the two infectious stages, $k_1$ and $k_2$ are progression rates, $\gamma$ represents treatment-induced return from $J$ to $I$, and $d$ is AIDS-related mortality.
+
+The corresponding classical SIJA model is obtained by setting $\alpha=1$, so that ${}_{0}^{\mathrm{RL}}D_t^1$ becomes the ordinary first derivative. Thus, in this example the fractional and classical models share the same compartments and transition terms; only the temporal operator changes. The use of a Riemann--Liouville derivative should also be noted, since it leads to a different interpretation of initial data from the Caputo models used in most of the surrounding examples.
+
+\subsection{Smoking dynamics: fractional POSQL model}
+
+Smoking behavior can also be represented as a compartmental transition process. The POSQL model divides a population into potential smokers $P$, occasional smokers $O$, regular smokers $S$, temporary quitters $Q$, and permanent quitters $L$. Unlike the preceding disease models, the ``transmission'' term describes social influence on smoking initiation rather than infection by a pathogen \cite{Ch21,Abdullah18}.
+
+The classical model is
+\[
+\begin{cases}
+ \dfrac{dP}{dt}=\Lambda-\beta PS-\mu P,\\[5pt]
+ \dfrac{dO}{dt}=\beta PS-\alpha_1O-\mu O,\\[5pt]
+ \dfrac{dS}{dt}=\alpha_1O+\alpha_2SQ-(\mu+\gamma)S,\\[5pt]
+ \dfrac{dQ}{dt}=-\alpha_2SQ-\mu Q+\gamma(1-\delta)S,\\[5pt]
+ \dfrac{dL}{dt}=\delta\gamma S-\mu L.
+\end{cases}
+\]
+Here $\Lambda$ is recruitment into $P$, $\beta$ is the effective social-contact rate, $\alpha_1$ is progression from occasional to regular smoking, $\gamma$ is the quitting rate, and $\alpha_2$ describes relapse through contact between smokers and temporary quitters. Fractions $1-\delta$ and $\delta$ of those quitting enter $Q$ and $L$, respectively, and $\mu$ is natural mortality.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=21mm]
+ \node[epi compartment] (P) {$P$};
+ \node[epi compartment,right=of P] (O) {$O$};
+ \node[epi compartment,right=of O] (S) {$S$};
+ \node[epi compartment,right=of S] (Q) {$Q$};
+ \node[epi compartment,right=of Q] (L) {$L$};
+ \draw[epi flow] (P)--node[epi label,above]{$\beta PS$}(O);
+ \draw[epi flow] (O)--node[epi label,above]{$\alpha_1O$}(S);
+ \draw[epi flow] (S)--node[epi label,above]{$\gamma(1-\delta)S$}(Q);
+ \draw[epi flow] (S) to[bend left=30] node[epi label,above]{$\delta\gamma S$}(L);
+ \draw[epi return] (Q) to node[epi label,below]{$\alpha_2SQ$}(S);
+ \draw[epi flow] ([xshift=-12mm]P.west)--node[epi label,above]{$\Lambda$}(P);
+\end{tikzpicture}
+\caption{Compartmental structure of the POSQL smoking model, including temporary relapse and permanent quitting.}
+\label{fig:smoking-posql}
+\end{figure}
+
+The Caputo model permits a separate order for each behavioral state:
+\[
+\begin{cases}
+ {}_{0}^{\mathrm C}\!D_t^{\phi_1}P=\Lambda-\beta PS-\mu P,\\
+ {}_{0}^{\mathrm C}\!D_t^{\phi_2}O=\beta PS-\alpha_1O-\mu O,\\
+ {}_{0}^{\mathrm C}\!D_t^{\phi_3}S=\alpha_1O+\alpha_2SQ-(\mu+\gamma)S,\\
+ {}_{0}^{\mathrm C}\!D_t^{\phi_4}Q=-\alpha_2SQ-\mu Q+\gamma(1-\delta)S,\\
+ {}_{0}^{\mathrm C}\!D_t^{\phi_5}L=\delta\gamma S-\mu L.
+\end{cases}
+\]
+The classical system is recovered when $\phi_1=\cdots=\phi_5=1$; unequal orders allow the persistence of past behavior to differ among smoking and quitting states.
+
+\subsection{Shigellosis and norovirus: fractional SEIAR model}
+
+Shigellosis and norovirus are enteric infections for which exposed and asymptomatic individuals can contribute importantly to an outbreak. A shigellosis model may additionally track pathogen concentration $W$ in contaminated water, while the norovirus model considered here uses the five human compartments susceptible $S$, exposed $E$, symptomatic infectious $I$, asymptomatic infectious $A$, and recovered $R$ \cite{Ch21}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+ \node[epi compartment] (S) at (0,0) {$S$};
+ \node[epi compartment] (E) at (2.6,0) {$E$};
+ \node[epi compartment] (I) at (5.2,1.3) {$I$};
+ \node[epi compartment] (A) at (5.2,-1.3) {$A$};
+ \node[epi compartment] (R) at (7.8,0) {$R$};
+ \node[epi reservoir] (W) at (0,-2.8) {$W$};
+ \draw[epi flow] (S)--node[epi label,above]{$\beta S(I+kA)$}(E);
+ \draw[epi flow] (E)--node[epi label,above left]{$(1-p)\omega E$}(I);
+ \draw[epi flow] (E)--node[epi label,below left]{$p\omega E$}(A);
+ \draw[epi flow] (I)--node[epi label,above right]{$\gamma I$}(R);
+ \draw[epi flow] (A)--node[epi label,below right]{$\gamma'A$}(R);
+ \draw[epi flow] (I) to[bend left=24] node[epi label,above left]{$qI$}(W);
+ \draw[epi flow] (A)--node[epi label,below]{$q'A$}(W);
+ \draw[epi flow,dashed] (W)--node[epi label,left]{$\beta_WSW$}(S);
+\end{tikzpicture}
+\caption{Compartmental structure of the SEIARW model for shigellosis. Removing $W$ gives the human SEIAR structure used for norovirus.}
+\label{fig:shigellosis-seiarw}
+\end{figure}
+
+For shigellosis, the review first gives the classical SEIARW system
+\[
+\begin{cases}
+ \dfrac{dS}{dt}=-\beta S(I+kA)-\beta_WSW,\\[5pt]
+ \dfrac{dE}{dt}=\beta S(I+kA)+\beta_WSW-\omega E,\\[5pt]
+ \dfrac{dI}{dt}=(1-p)\omega E-\gamma I,\\[5pt]
+ \dfrac{dA}{dt}=p\omega E-\gamma' A,\\[5pt]
+ \dfrac{dR}{dt}=\gamma I+\gamma' A,\\[5pt]
+ \dfrac{dW}{dt}=qI+q'A-\varepsilon W.
+\end{cases}
+\]
+The terms $\beta S(I+kA)$ and $\beta_WSW$ represent person-to-person and waterborne infection, respectively. A proportion $p$ of exposed individuals becomes asymptomatic, while symptomatic and asymptomatic cases contaminate the water reservoir at rates $q$ and $q'$. The notation $q,q'$ is used here for the shedding coefficients to avoid confusing them with the symbol $\mu$ used below.
+
+The fractional before-and-after comparison in this part of the review is then made for norovirus, whose classical SEIAR model is
+\[
+\begin{cases}
+ \dfrac{dS}{dt}=-\beta S(I+\kappa A),\\[5pt]
+ \dfrac{dE}{dt}=\beta S(I+\kappa A)-\mu\omega' E-(1-\mu)\omega E,\\[5pt]
+ \dfrac{dI}{dt}=(1-\mu)\omega E-\gamma I,\\[5pt]
+ \dfrac{dA}{dt}=\mu\omega' E-\gamma' A,\\[5pt]
+ \dfrac{dR}{dt}=\gamma I+\gamma' A.
+\end{cases}
+\]
+Here $\kappa$ is the infectiousness of asymptomatic relative to symptomatic cases, $\mu$ is the proportion progressing to asymptomatic infection, $\omega$ and $\omega'$ are progression rates from $E$, and $\gamma$ and $\gamma'$ are recovery rates. In this model $\mu$ is not a mortality rate.
+
+The dimensionally adjusted fractional model reviewed in \cite{Ch21} is
+\[
+\begin{cases}
+ \lambda_{\alpha_1}{}_{0}^{\mathrm C}\!D_t^{\alpha_1}S=-\beta S(I+\kappa A),\\
+ \lambda_{\alpha_2}{}_{0}^{\mathrm C}\!D_t^{\alpha_2}E=\beta S(I+\kappa A)-\mu\omega' E-(1-\mu)\omega E,\\
+ \lambda_{\alpha_3}{}_{0}^{\mathrm C}\!D_t^{\alpha_3}I=(1-\mu)\omega E-\gamma I,\\
+ \lambda_{\alpha_4}{}_{0}^{\mathrm C}\!D_t^{\alpha_4}A=\mu\omega' E-\gamma' A,\\
+ \lambda_{\alpha_5}{}_{0}^{\mathrm C}\!D_t^{\alpha_5}R=\gamma I+\gamma' A.
+\end{cases}
+\]
+The factors $\lambda_{\alpha_j}$ have units of $\text{time}^{\alpha_j-1}$, ensuring that both sides retain units of population per unit time. This explicit scaling distinguishes the model from a direct derivative replacement and will be useful later when discussing dimensional consistency in fractional epidemic models.
+
+\ifSubfilesClassLoaded{\printbibliography}{}
+
+\end{document}

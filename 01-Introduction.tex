@@ -1,0 +1,221 @@
+% !TeX root = 00-main.tex
+\documentclass[00-main.tex]{subfiles}
+
+\begin{document}
+
+\section{Introduction}
+The classical \textit{susceptible--infectious--recovered} (SIR) model provides one of the simplest mathematical frameworks for describing the spread of an infectious disease through a population. At time $t$, let $\widehat S(t)$, $\widehat I(t)$, and $\widehat R(t)$ denote the numbers of susceptible, infectious, and recovered or removed individuals, respectively. The total population is therefore
+\[
+    N(t)=\widehat S(t)+\widehat I(t)+\widehat R(t).
+\]
+We normalize the compartment sizes by $N(t)$ and, for simplicity, reuse the letters $S$, $I$, and $R$ for the resulting population proportions:
+\[
+    S(t)=\frac{\widehat S(t)}{N(t)}, \qquad
+    I(t)=\frac{\widehat I(t)}{N(t)}, \qquad
+    R(t)=\frac{\widehat R(t)}{N(t)}.
+\]
+Consequently, $S(t)+I(t)+R(t)=1$, and each state variable takes values in $[0,1]$.
+To allow for demographic turnover, we consider the normalized SIR system
+\[
+\begin{cases}
+		S'(t) = \Lambda - \beta S(t)I(t) - \mu S(t), \\
+		I'(t) = \beta S(t)I(t) - \gamma I(t) - \mu I(t), \\
+		R'(t) = \gamma I(t) - \mu R(t).
+\end{cases}
+\]
+Here $\Lambda$ is the \textit{recruitment rate} into the susceptible compartment per unit population, $\beta$ is the \textit{effective transmission rate}, $\gamma$ is the \textit{recovery/removal rate}, and $\mu$ is the \textit{natural per-capita mortality rate}.
+
+The nonlinear term $\beta SI$ describes the incidence of new infections under homogeneous mixing: susceptible individuals leave the $S$ compartment and enter the $I$ compartment at this rate.
+Infectious individuals recover or are removed at rate $\gamma I$, while natural mortality acts on all three compartments at rate $\mu$.
+
+Adding the three equations gives
+\[
+    \frac{d}{dt}(S+I+R)=\Lambda-\mu(S+I+R).
+\]
+Thus, under the normalization $S+I+R=1$, demographic equilibrium requires $\Lambda=\mu$; this assumption keeps the normalized population constant.
+The special case $\Lambda=\mu=0$ reduces the system to the classical closed-population SIR model.
+
+
+\subsection{Limitations of the classical SIR model}
+
+Although the classical SIR model provides a useful first approximation of epidemic dynamics, it relies on several simplifying assumptions:
+\begin{enumerate}
+	\item \textit{Lack of explicit memory.}
+	The system is memoryless in the sense that its future evolution is determined entirely by the current values of $S(t)$, $I(t)$, and $R(t)$.
+	The rates of infection and recovery at time $t$ do not explicitly depend on the previous states of the epidemic.
+	Consequently, the model may not adequately represent processes with memory or delay, such as variable incubation periods, heterogeneous recovery times, temporary immunity, or behavioral responses influenced by past infection levels.
+
+	\item \textit{Constant parameters.}
+	The parameters $\lambda$, $\beta$, $\gamma$, and $\mu$ are usually assumed to be constant over time.
+	In practice, however, the transmission rate may change because of public-health interventions, seasonal effects, changes in contact behavior, or the emergence of new variants.
+	Similarly, recovery and mortality rates may vary with medical treatment, healthcare capacity, demographic characteristics, and the stage of the epidemic.
+	Treating these parameters as constants therefore limits the ability of the classical model to capture time-dependent and history-dependent epidemic behavior.
+\end{enumerate}
+
+These limitations motivate extensions of the classical SIR framework.
+One possible approach is to replace the ordinary time derivatives with \textit{fractional derivatives}, which introduce nonlocal dependence on the past states of the system and provide a mathematical mechanism for modeling memory effects.
+
+
+\subsection{Preliminaries}
+
+In this section, we introduce the basic concepts of fractional calculus needed for the fractional SIR models discussed later.
+We first motivate the fractional integral through the Cauchy formula for repeated integration, and then present the Caputo and Riemann--Liouville fractional derivatives together with the relation between them.
+
+The definition of a fractional integral is motivated by the classical formula for repeated integration. Let
+\[
+    {}_a I_t f(t) = \int_a^t f(\tau)\,d\tau
+\]
+denote the integral of $f$ from $a$ to $t$. Applying this operator $n$ times gives the $n$-fold integral
+\[
+    {}_a I_t^n f(t)
+    = \int_a^t \int_a^{t_1} \cdots \int_a^{t_{n-1}}
+      f(t_n)\,dt_n\cdots dt_2\,dt_1.
+\]
+By changing the order of integration, this iterated integral can be written as a single integral. The resulting identity is the \emph{Cauchy formula for repeated integration}:
+\[
+    {}_a I_t^n f(t)
+    = \frac{1}{(n-1)!}\int_a^t (t-\tau)^{n-1}f(\tau)\,d\tau,
+    \qquad n\in\mathbb{N}.
+\]
+The right-hand side depends on $n$ through the power $n-1$ and the factorial $(n-1)!$. Since the gamma function satisfies
+\[
+    \Gamma(z)=\int_0^\infty s^{z-1}e^{-s}\,ds,
+    \qquad \Gamma(n)=(n-1)!,
+\]
+the integer order $n$ can be replaced naturally by an arbitrary real order $\alpha>0$. This observation leads to the following definition.
+
+\begin{definition}[Fractional integral]
+	The \textit{fractional integral} of order $\alpha>0$ of a function $f$ is defined by
+	\[
+        {}_a I_t^\alpha f(t)
+        = {}_a D_t^{-\alpha}f(t)
+        = \frac{1}{\Gamma(\alpha)}
+          \int_a^t (t-\tau)^{\alpha-1}f(\tau)\,d\tau.
+    \]
+\end{definition}
+
+Unlike fractional integration, fractional differentiation does not have a unique standard definition.
+Two commonly used definitions are the \textit{Caputo derivatives} and \textit{Riemann--Liouville derivatives}.
+The Caputo derivative first applies an integer-order derivative and then a fractional integral, whereas the Riemann--Liouville derivative reverses this order by applying a fractional integral before the integer-order derivative.
+
+\begin{definition}[Caputo derivative]
+	The \textit{Caputo derivative} of order $\alpha$ of a function $f(t)$ is defined by
+	\[ {}_{a}^{\mathrm{C}}\!D_t^\alpha f(t)
+	= {}_{a}\!D_t^{-(n-\alpha)} \frac{d^n}{dt^n} f(t)
+	= \frac{1}{\Gamma(n-\alpha)} \int_a^t (t-\tau)^{n-\alpha-1} f^{(n)}(\tau)\,d\tau,
+	\]
+	where $n-1 < \alpha < n$ and $n\in\mathbb{Z}^+$.
+\end{definition}
+
+\begin{definition}[Riemann--Liouville derivative]
+	The \textit{Riemann--Liouville derivative} of order $\alpha$ of a function $f(t)$ is defined by
+	\[ {}_{\phantom{R}a}^{\mathrm{RL}}\!D_t^\alpha f(t)
+	= \frac{d^n}{dt^n} {}_{a}\!D_t^{-(n-\alpha)} f(t)
+	= \frac{1}{\Gamma(n-\alpha)} \frac{d^n}{dt^n} \int_a^t (t-\tau)^{n-\alpha-1} f(\tau)\,d\tau,
+	\]
+	where $n-1 < \alpha < n$ and $n\in\mathbb{Z}^+$.
+\end{definition}
+
+These two derivatives are not equivalent in general.
+In fact, their relation can be described as:
+\[ {}_a^\mathrm{C}\!D_t^\alpha f(t) = {}_{\phantom{R}a}^\mathrm{RL}\!D_t^\alpha f(t) - \sum\limits_{k=0}^{n-1} \frac{(t-a)^{k-\alpha} f^{(k)}(a)}{\Gamma(k-\alpha+1)}. \]
+If the initial conditions $f^{(k)}(a) = 0$ for all $k\in\{0,1,\ldots,n-1\}$, then they are equivalent.
+
+
+\subsection{Fractional SIR model}
+
+Having identified the absence of explicit memory as a limitation of the classical model, we now make the desired history dependence mathematically precise.
+We follow the kernel-based construction of \cite{Sa17}, beginning for clarity with the closed-population SIR model:
+\[
+\begin{cases}
+    S'(t)=-\beta S(t)I(t), \\
+    I'(t)=\beta S(t)I(t)-\gamma I(t), \\
+    R'(t)=\gamma I(t).
+\end{cases}
+\]
+Following \cite{Sa17}, memory is introduced by allowing the present rates of change to depend on transition rates at all earlier times.
+This gives the convolution system
+\[
+\begin{aligned}
+    \frac{dS(t)}{dt}
+        &=-\beta\int_0^t
+          \kappa(t-\tau)S(\tau)I(\tau)\,d\tau, \\
+    \frac{dI(t)}{dt}
+        &=\int_0^t\kappa(t-\tau)
+          \bigl[\beta S(\tau)I(\tau)
+          -\gamma I(\tau)\bigr]\,d\tau, \\
+    \frac{dR(t)}{dt}
+        &=\gamma\int_0^t
+          \kappa(t-\tau)I(\tau)\,d\tau,
+\end{aligned}
+\]
+where $\kappa(t-\tau)$ is a memory kernel.
+In the Markovian limit, the kernel is concentrated at the present time and is represented by a Dirac delta function.
+To model long-range memory, \cite{Sa17} choose the power-law kernel
+\[
+    \kappa(t-\tau)
+    =\frac{(t-\tau)^{\alpha-2}}{\Gamma(\alpha-1)}.
+\]
+The occurrence of $\Gamma(\alpha-1)$, rather than $\Gamma(\alpha)$, results from differentiating the corresponding fractional integral:
+\[
+    \frac{d}{dt}
+    \left[
+        \frac{1}{\Gamma(\alpha)}
+        \int_0^t(t-\tau)^{\alpha-1}F(\tau)\,d\tau
+    \right]
+    =
+    \frac{1}{\Gamma(\alpha-1)}
+    \int_0^t(t-\tau)^{\alpha-2}F(\tau)\,d\tau.
+\]
+This identity is understood in the fractional-operator sense; for $0<\alpha<1$, the expression on the right is hypersingular and is not an ordinary improper integral. Rewriting the convolution system in fractional-operator notation gives the Caputo SIR model
+\[
+\begin{cases}
+    {}_{0}^{\mathrm{C}}\!D_t^\alpha S(t)
+        =-\beta^\alpha S(t)I(t), \\
+    {}_{0}^{\mathrm{C}}\!D_t^\alpha I(t)
+        =\beta^\alpha S(t)I(t)-\gamma^\alpha I(t), \\
+    {}_{0}^{\mathrm{C}}\!D_t^\alpha R(t)
+        =\gamma^\alpha I(t),
+\end{cases}
+\]
+subject to the initial conditions
+\[
+    S(0)=S_0, \qquad I(0)=I_0, \qquad R(0)=R_0,
+    \qquad S_0+I_0+R_0=1.
+\]
+The superscript $\alpha$ distinguishes the fractional-order parameters $\beta^\alpha$ and $\gamma^\alpha$ from their classical counterparts.
+For dimensional consistency, the coefficients appearing in this fractional system must have units compatible with $\mathrm{time}^{-\alpha}$.
+However, interpreting them simply as powers of the classical rates is itself a modeling choice; alternative dimensional corrections have also been proposed in the literature and will be discussed later.
+
+As $\alpha\to 1$, the memory kernel approaches the memoryless limit and the Caputo derivative reduces to the ordinary first derivative, so the classical SIR model is recovered.
+For $0<\alpha<1$, the power-law memory has no finite cutoff: every earlier state contributes to the present dynamics, although with a time-dependent weight.
+\cite{Sa17} shows that this memory mechanism can alter epidemic thresholds and transient behavior in both fully mixed populations and structured networks.
+
+
+\subsection{Why use a fractional model?}
+
+The preceding construction gives a precise mathematical route from a memory kernel to a fractional SIR model, but it does not imply that fractional differentiation is the only possible description of epidemic memory.
+The choice should be evaluated by considering both its advantages and its limitations.
+\begin{enumerate}
+    \item \textit{Arguments in favor.}
+    A Caputo derivative is nonlocal, so the current rate of change depends explicitly on the past trajectory rather than only on the present compartment sizes.
+    Its power-law kernel provides a parsimonious representation of slowly decaying memory using a single additional parameter $\alpha$, while retaining the classical model as the limiting case $\alpha=1$.
+    This makes it possible to study how memory changes transient dynamics and epidemic thresholds within a framework closely related to the ordinary SIR model.
+
+    \item \textit{Points requiring caution.}
+    Replacing an ordinary derivative by a fractional one is a modeling assumption, not a consequence of non-Markovian behavior alone.
+    The power-law kernel should be supported by a plausible mechanism or by data; otherwise, $\alpha$ may serve only as an extra fitting parameter without a clear epidemiological interpretation.
+    Fractional parameters also require careful dimensional treatment and may be difficult to identify separately from transmission, recovery, and initial-condition effects.
+
+    \item \textit{Alternative descriptions.}
+    Memory can also be modeled through delay differential equations, renewal equations, infection-age or stage-structured models, distributed waiting times, and explicitly time-dependent parameters.
+    These alternatives may be preferable when the relevant mechanism is a specific incubation delay, a known infectious-period distribution, or a documented intervention schedule rather than scale-free long-range memory.
+\end{enumerate}
+
+Therefore, the main justification for using a fractional SIR model is not merely that real epidemics have a past.
+It is that the epidemic exhibits history dependence that can reasonably be represented by a nonlocal power-law kernel, and that the fractional model provides a better balance of explanatory value, predictive performance, and parsimony than suitable non-fractional alternatives.
+In applications, this claim should ultimately be assessed by comparing competing models against data rather than assumed in advance.
+
+\ifSubfilesClassLoaded{\printbibliography}{}
+
+\end{document}

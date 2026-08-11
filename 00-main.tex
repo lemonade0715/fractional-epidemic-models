@@ -1,0 +1,163 @@
+\documentclass[11pt,nosumlimits,twoside]{amsart}
+\usepackage{subfiles}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{references.bib}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsfonts, amsmath, amssymb}
+\usepackage[bookmarksnumbered,plainpages,driverfallback=dvipdfm,linktocpage=true, colorlinks=true, linkcolor=magenta, filecolor=magenta,urlcolor=cyan,citecolor=cyan]{hyperref}
+\usepackage{graphicx, subcaption}
+\usepackage{float}
+\usepackage{srcltx}
+\usepackage[all]{xy}
+\usepackage{bbm}
+\usepackage{version}
+%\usepackage[outer]{showlabels} % put "finals" to turns off
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\tikzset{
+  epi compartment/.style={circle,draw,thick,minimum size=10mm,inner sep=1pt,fill=blue!7},
+  epi reservoir/.style={circle,draw,thick,minimum size=10mm,inner sep=1pt,fill=green!10},
+  epi flow/.style={-{Stealth[length=2mm]},thick},
+  epi return/.style={-{Stealth[length=2mm]},thick,bend left=28},
+  epi loss/.style={-{Stealth[length=1.8mm]},thin},
+  epi label/.style={font=\scriptsize,align=center,inner sep=1pt}
+}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{pgfplotstable}
+\usepgfplotslibrary{statistics}
+%\usetikzlibrary{intersections}
+\usetikzlibrary{fillbetween}
+\usepackage[figuresright]{rotating}
+\usepackage{longtable}
+\usepackage{pdflscape} % or lscape
+\usepackage{siunitx}
+%\usepackage{subfigure}
+\captionsetup[subfigure]{labelformat=simple}
+\renewcommand\thesubfigure{(\textsc{\alph{subfigure}})}
+
+\usepackage{iftex}
+\ifPDFTeX
+    \usepackage[T1]{fontenc}
+\else
+    \usepackage{fontspec}
+\fi
+\usepackage{xcolor}
+\usepackage{enumerate}
+\usepackage[normalem]{ulem}
+\usepackage{bm}
+\usepackage{latexsym}
+\usepackage{stmaryrd}
+\usepackage[2emode]{psfrag}
+\usepackage{yhmath}
+\usepackage{array}
+\usepackage{dsfont}
+\usepackage{mathrsfs}% for \mathscr
+\usepackage{tikz-cd}% diagrams
+\usepackage{comment}
+\usepackage{lipsum}
+\usepackage{booktabs}
+\usetikzlibrary { decorations.pathmorphing, decorations.pathreplacing, decorations.shapes }
+%\usepackage[displaymath, mathlines]{lineno}  %for line numbering
+%\addtolength{\hoffset}{-1.5cm}
+%\addtolength{\textwidth}{3cm}
+%%%%%%%%%%%%%%%%%
+
+\newtheoremstyle{mytheorem}%
+{10.0pt plus 2.0pt minus 2.0pt} % Space above
+{10.0pt plus 2.0pt minus 2.0pt} % Space below
+{\itshape} % Body font
+{} % Indent amount
+{\bfseries} % Theorem head font
+{.} % Punctuation after theorem head
+{ } % Space after theorem head
+{} % Theorem head spec (can be left empty, meaning `normal')
+
+\newtheoremstyle{mydefinition}%
+{10.0pt plus 2.0pt minus 2.0pt} % Space above
+{10.0pt plus 2.0pt minus 2.0pt} % Space below
+{} % Body font
+{} % Indent amount
+{\bfseries} % Theorem head font
+{.} % Punctuation after theorem head
+{ } % Space after theorem head
+{} % Theorem head spec (can be left empty, meaning `normal')
+
+\newtheoremstyle{myremark}%
+{10.0pt plus 2.0pt minus 2.0pt} % Space above
+{10.0pt plus 2.0pt minus 2.0pt} % Space below
+{} % Body font
+{} % Indent amount
+{\itshape} % Theorem head font
+{.} % Punctuation after theorem head
+{ } % Space after theorem head
+{} % Theorem head spec (can be left empty, meaning `normal')
+
+\theoremstyle{mytheorem}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition} 
+
+\theoremstyle{myremark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{convention}[theorem]{Convention}
+\newtheorem{notation}[theorem]{Notation}
+
+\theoremstyle{mydefinition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{counterexample}[theorem]{Counterexample}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{question}[theorem]{Question}
+
+\newtheoremstyle{myzusatz}
+ {10.0pt plus 2.0pt minus 2.0pt} % Space above
+{10.0pt plus 2.0pt minus 2.0pt} % Space below
+{\itshape} % Body font
+{} % Indent amount
+{\bfseries} % Theorem head font
+{.} % Punctuation after theorem head
+{ } % Space after theorem head
+{\thmname{#1}\thmnumber{ #2}\thmnote{ #3}}
+\newcommand{\theoremarg}{}
+  
+\theoremstyle{myzusatz}
+\newtheorem{zusatz}[theorem]{Zusatz}
+
+%%%%%%%%%%%%%%%%
+
+\newenvironment{invisible}{\noindent\color{gray}}{\medskip}
+\newcommand{\ZS}{\,\raisebox{1pt}{$\mathcal{Z}$}\!\!\!\raisebox{-1pt}{$\mathcal{S}$}\,}
+\newcommand\func{\mathrm{}}
+\def\dsum{\sum}
+\allowdisplaybreaks
+\excludeversion{invisible?}
+\excludeversion{proof?}
+
+\newenvironment{sistema}%
+{
+\left\{\begin{aligned}}
+{\end{aligned}
+\right.
+}
+
+\begin{document}
+\title{A brief introduction to\\fractional mathematical epidemic model}
+\author{Hsin-Yen Chiang}
+
+\maketitle
+
+\tableofcontents
+
+\nocite{Ch21,Sa17,Is20,Xi23,Gh25,Cu26,Ci26}
+
+\subfile{01-Introduction}
+
+\subfile{02-Model-Formulation-Review}
+
+
+\printbibliography
+
+\end{document}
