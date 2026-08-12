@@ -131,19 +131,113 @@ There is also a dimensional caveat. The ordinary derivative on the left-hand sid
 \subsection{Stochastic interpretation of the fractional model}
 
 A common criticism of fractional epidemic models is that an ordinary derivative may simply be replaced by a fractional derivative without identifying a mechanism that produces it.
-The construction in \cite{Is20} instead begins with the numbers of susceptible, exposed, and infectious individuals as discrete random variables.
-Birth, infection, progression, recovery, and natural death determine the transition intensities of a stochastic SEIR birth-and-death process; the recovered population follows from conservation of the total population. \sourcenote{Section 2.2}
+The construction in \cite{Is20} instead defines a family of stochastic SEIR processes indexed by the order $0<\alpha\leq1$.
+Let
+\[
+\boldsymbol{X}^{(\alpha)}(t)
+=\bigl(X_1^{(\alpha)}(t),X_2^{(\alpha)}(t),X_3^{(\alpha)}(t),X_4^{(\alpha)}(t)\bigr)
+\]
+denote the numbers of susceptible, exposed, infectious, and recovered individuals at time $t$.
+The superscript $(\alpha)$ records the order of the stochastic process, and
+\[
+X_1^{(\alpha)}+X_2^{(\alpha)}+X_3^{(\alpha)}+X_4^{(\alpha)}=N.
+\]
+Unlike the deterministic variables in the preceding subsection, these variables are integer-valued random counts.
+The paper takes $N$ as the population size and includes recruitment at rate $\mu N$ together with natural mortality in every compartment.
+These demographic flows balance at the population level used to derive the normalized deterministic system; the transition table itself lists recruitment and deaths as separate stochastic changes.
 
-Let $\boldsymbol{X}^{(\alpha)}(t)$ denote the fractional stochastic SEIR process and $\boldsymbol{X}^{(1)}(t)$ its classical counterpart.
-The principal stochastic result may be summarized as
+The classical process is obtained by setting $\alpha=1$ and is denoted by $\boldsymbol{X}^{(1)}(t)$; this special case is a continuous-time Markov chain (CTMC).
+Its state may change at any continuous time, but each change is one of a specified collection of events.
+The Markov property means that, conditional on the present state, the distribution of the next event and its waiting time does not depend on the earlier history.
+More precisely, if the possible transitions from a current state have rates $r_1,\ldots,r_m$, then the waiting time to the next event is exponentially distributed with total rate $r_1+\cdots+r_m$, and event $j$ is selected with probability $r_j/(r_1+\cdots+r_m)$.
+The possible componentwise transitions and their rates are listed in Table~\ref{tab:ch3-ctmc-transitions}.
+The event-name column is included to make the epidemiological meaning of each row explicit.
+
+\begin{table}[H]
+\centering
+\caption{Transitions and rates of the stochastic SEIR process \cite{Is20}.}
+\label{tab:ch3-ctmc-transitions}
+\begin{tabular}{lll}
+\toprule
+Event & Transition & Rate \\
+\midrule
+Recruitment & $X_1^{(\alpha)}\to X_1^{(\alpha)}+1$ & $\mu N$ \\[3pt]
+Infection or death from $S$ & $X_1^{(\alpha)}\to X_1^{(\alpha)}-1$ & $\displaystyle \beta\frac{X_1^{(\alpha)}X_3^{(\alpha)}}{N}+\mu X_1^{(\alpha)}$ \\[6pt]
+Infection & $X_2^{(\alpha)}\to X_2^{(\alpha)}+1$ & $\displaystyle \beta\frac{X_1^{(\alpha)}X_3^{(\alpha)}}{N}$ \\[6pt]
+Progression or death from $E$ & $X_2^{(\alpha)}\to X_2^{(\alpha)}-1$ & $(\mu+\delta)X_2^{(\alpha)}$ \\[3pt]
+Progression & $X_3^{(\alpha)}\to X_3^{(\alpha)}+1$ & $\delta X_2^{(\alpha)}$ \\[3pt]
+Recovery or death from $I$ & $X_3^{(\alpha)}\to X_3^{(\alpha)}-1$ & $(\mu+\sigma)X_3^{(\alpha)}$ \\[3pt]
+Recovery & $X_4^{(\alpha)}\to X_4^{(\alpha)}+1$ & $\sigma X_3^{(\alpha)}$ \\[3pt]
+Death from $R$ & $X_4^{(\alpha)}\to X_4^{(\alpha)}-1$ & $\mu X_4^{(\alpha)}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As in the original presentation, the table records increases and decreases of individual components separately.
+Consequently, a decrease row may combine more than one mechanism: for example, $X_1^{(\alpha)}\to X_1^{(\alpha)}-1$ can result from either infection or natural death.
+At the same time, a transfer event contributes to two componentwise changes: one infection decreases $X_1^{(\alpha)}$ and increases $X_2^{(\alpha)}$.
+Thus, the rows reproduce the marginal transition format of the original table and should not be interpreted as eight mutually independent epidemiological events.
+
+A transition rate is an instantaneous event intensity, not a fixed waiting time.
+In the classical case $\alpha=1$, if the current infection rate is
+\[
+r_{\mathrm{inf}}=\beta\frac{X_1^{(1)}X_3^{(1)}}{N},
+\]
+then, over a sufficiently short interval of length $\Delta t$, the probability of one infection event is
+\[
+r_{\mathrm{inf}}\Delta t+o(\Delta t).
+\]
+Hence infection events become more frequent when either the susceptible or infectious population increases.
+This short-time CTMC interpretation applies specifically to $\alpha=1$; for $0<\alpha<1$, the altered waiting-time structure is described through the fractional forward equation and random-time construction below.
+
+These event rates also explain the deterministic equations.
+For example, recruitment increases $X_1$, whereas infection and susceptible mortality decrease it.
+Therefore, the equation for its expectation is
+\begin{equation}
+\label{eq:ch3-expected-susceptible}
+\frac{d}{dt}\mathbb{E}[X_1^{(1)}]
+=\mu N-\frac{\beta}{N}\mathbb{E}[X_1^{(1)}X_3^{(1)}]
+-\mu\mathbb{E}[X_1^{(1)}].
+\end{equation}
+This equation is not closed in the first moments because it contains the mixed second moment $\mathbb{E}[X_1^{(1)}X_3^{(1)}]$.
+Under the mean-field approximation
+\[
+\mathbb{E}[X_1^{(1)}X_3^{(1)}]
+\approx
+\mathbb{E}[X_1^{(1)}]\mathbb{E}[X_3^{(1)}],
+\]
+the covariance between susceptible and infectious counts is neglected, since
+\[
+\mathbb{E}[X_1^{(1)}X_3^{(1)}]
+=\mathbb{E}[X_1^{(1)}]\mathbb{E}[X_3^{(1)}]
++\operatorname{Cov}(X_1^{(1)},X_3^{(1)}).
+\]
+After applying this closure and dividing Equation~\eqref{eq:ch3-expected-susceptible} by $N$, one obtains
+\[
+\frac{dS}{dt}=\mu-\beta SI-\mu S.
+\]
+Applying the same event-balance argument to the other compartments produces the classical deterministic SEIR system in \eqref{eq:ch3-classical-seir}.
+Thus, the ODE can be interpreted as a mean-field approximation to the expected behavior of the CTMC.
+
+The fractional construction retains the same epidemiological events but changes the stochastic clock governing their occurrence.
+The memoryless CTMC is introduced as a baseline: the fractional construction retains its epidemiological transition structure but evaluates the classical process on a random operational clock. In physical time, this time change modifies the exponential waiting-time structure and introduces non-Markovian temporal dependence.
+Let $\boldsymbol{X}^{(\alpha)}(t)$ denote the resulting fractional stochastic process.
+Its state probabilities satisfy a fractional forward Kolmogorov equation in which the ordinary time derivative is replaced by a Caputo derivative of order $\alpha$.
+For $\alpha=1$, this is the ordinary forward equation of the CTMC.
+For $0<\alpha<1$, the process generally loses the Markov property because its temporal evolution retains information about past waiting times.
+
+The relationship between the two stochastic processes is expressed through random-time subordination:
 \[
 \boldsymbol{X}^{(\alpha)}(t)
 \overset{d}{=}
 \boldsymbol{X}^{(1)}\!\left(T_{2\alpha}(t)\right),
 \]
-where $T_{2\alpha}(t)$ is a random operational time and $\overset{d}{=}$ denotes equality in distribution. Thus, the fractional process can be viewed as the classical process observed on a randomized clock. When $\alpha=1$ the construction returns the ordinary stochastic process, whereas $0<\alpha<1$ alters its waiting-time structure. \sourcenote{Section 2.2, Theorem 1}
+where $T_{2\alpha}(t)$ is a random operational time and $\overset{d}{=}$ denotes equality in distribution.
+Thus, the fractional process can be viewed as the classical CTMC observed on a randomized clock.
+When $\alpha=1$ the construction returns the ordinary process, whereas $0<\alpha<1$ alters its waiting-time structure.
 
-The deterministic fractional model is obtained by differentiating the probability-generating function to derive equations for the expected compartment sizes. With $N$ denoting the constant population, the normalized means are defined by
+To obtain deterministic equations from the fractional process, the probability-generating function is differentiated to derive equations for the expected compartment sizes.
+The normalized fractional means are defined by
 \[
 S^{(\alpha)}(t)=\frac{1}{N}\mathbb{E}\!\left[X_1^{(\alpha)}(t)\right],\qquad
 E^{(\alpha)}(t)=\frac{1}{N}\mathbb{E}\!\left[X_2^{(\alpha)}(t)\right],\qquad
@@ -156,9 +250,21 @@ The moment equations are not closed because infection contains a product of susc
 \mathbb{E}\!\left[X_1^{(\alpha)}\right]
 \mathbb{E}\!\left[X_3^{(\alpha)}\right]
 \]
-closes the system and produces the deterministic Caputo equations in \eqref{eq:ch3-fractional-seir}. The FDE is therefore an approximation to the means of the fractional stochastic process, just as a classical ODE is commonly interpreted as a mean-field approximation of an integer-order stochastic process. \sourcenote{Sections 2.2--2.3, Equations (11)--(13)}
+closes the system and produces the deterministic Caputo equations in \eqref{eq:ch3-fractional-seir}.
+The FDE is therefore an approximation to the means of the fractional stochastic process, just as the classical ODE approximates the mean behavior of the CTMC.
 
-This derivation does not imply that all randomness has disappeared from the underlying epidemic. Rather, it explains the deterministic fractional system as a population-level approximation and gives the fractional derivative a probabilistic origin. The full fractional Kolmogorov equations and generating-function calculation are omitted here because the present goal is comparison, but the sequence from stochastic transitions to moment equations and then to mean-field closure is essential to the interpretation.
+The resulting chain of ideas is therefore
+\[
+\begin{aligned}
+\text{CTMC transition rules}
+&\longrightarrow \text{fractional stochastic clock}\\[3pt]
+&\longrightarrow \text{fractional moment equations}\\[3pt]
+&\longrightarrow \text{mean-field Caputo SEIR model}.
+\end{aligned}
+\]
+This derivation does not imply that randomness has disappeared from the underlying epidemic.
+Rather, it explains the deterministic fractional system as a population-level approximation and gives the fractional derivative a probabilistic origin.
+The full fractional Kolmogorov equation and generating-function calculation are omitted here, but the transition table, randomized clock, and mean-field closure provide the essential connection.
 
 
 \subsection{Dynamical and empirical comparison}
