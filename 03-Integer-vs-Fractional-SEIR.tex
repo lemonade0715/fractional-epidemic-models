@@ -56,7 +56,7 @@ The resulting compartmental structure is displayed in Figure~\ref{fig:ch3-seir-f
   \draw[loss] (\x.south) -- ++(0,-0.75) node[below,font=\scriptsize] {$\mu \x$};
 }
 \end{tikzpicture}
-\caption{Compartmental structure of the normalized SEIR model used in Chapter~3.}
+\caption{Compartmental structure of the normalized SEIR model.}
 \label{fig:ch3-seir-flow}
 \end{figure}
 
@@ -130,9 +130,12 @@ There is also a dimensional caveat. The ordinary derivative on the left-hand sid
 
 \subsection{Stochastic interpretation of the fractional model}
 
-A common criticism of fractional epidemic models is that an ordinary derivative may simply be replaced by a fractional derivative without identifying a mechanism that produces it. The construction in \cite{Is20} instead begins with the numbers of susceptible, exposed, and infectious individuals as discrete random variables. Birth, infection, progression, recovery, and natural death determine the transition intensities of a stochastic SEIR birth-and-death process; the recovered population follows from conservation of the total population. \sourcenote{Section 2.2}
+A common criticism of fractional epidemic models is that an ordinary derivative may simply be replaced by a fractional derivative without identifying a mechanism that produces it.
+The construction in \cite{Is20} instead begins with the numbers of susceptible, exposed, and infectious individuals as discrete random variables.
+Birth, infection, progression, recovery, and natural death determine the transition intensities of a stochastic SEIR birth-and-death process; the recovered population follows from conservation of the total population. \sourcenote{Section 2.2}
 
-Let $\boldsymbol{X}^{(\alpha)}(t)$ denote the fractional stochastic SEIR process and $\boldsymbol{X}^{(1)}(t)$ its classical counterpart. The principal stochastic result may be summarized as
+Let $\boldsymbol{X}^{(\alpha)}(t)$ denote the fractional stochastic SEIR process and $\boldsymbol{X}^{(1)}(t)$ its classical counterpart.
+The principal stochastic result may be summarized as
 \[
 \boldsymbol{X}^{(\alpha)}(t)
 \overset{d}{=}
@@ -156,6 +159,7 @@ The moment equations are not closed because infection contains a product of susc
 closes the system and produces the deterministic Caputo equations in \eqref{eq:ch3-fractional-seir}. The FDE is therefore an approximation to the means of the fractional stochastic process, just as a classical ODE is commonly interpreted as a mean-field approximation of an integer-order stochastic process. \sourcenote{Sections 2.2--2.3, Equations (11)--(13)}
 
 This derivation does not imply that all randomness has disappeared from the underlying epidemic. Rather, it explains the deterministic fractional system as a population-level approximation and gives the fractional derivative a probabilistic origin. The full fractional Kolmogorov equations and generating-function calculation are omitted here because the present goal is comparison, but the sequence from stochastic transitions to moment equations and then to mean-field closure is essential to the interpretation.
+
 
 \subsection{Dynamical and empirical comparison}
 
