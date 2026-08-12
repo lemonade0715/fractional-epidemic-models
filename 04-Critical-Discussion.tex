@@ -5,4 +5,240 @@
 
 \section{Ambiguities and Challenges in Fractional Epidemic Modeling}
 
+The preceding chapters have shown that fractional derivatives can enlarge the range of temporal behavior available to compartmental epidemic models.
+Greater flexibility, however, does not by itself establish that a fractional model is mathematically consistent, biologically interpretable, or empirically identifiable.
+This chapter therefore shifts from model construction to critical assessment.
+The discussion is organized around three questions: whether the equations are dimensionally coherent, whether the fractional operator represents a defensible memory mechanism, and whether the additional structure can be distinguished reliably from ordinary epidemic parameters using data.
+
+\subsection{Dimensional consistency and parameter interpretation}
+
+The dimensional difficulties that arise in fractional ecological and epidemiological models are surveyed in \cite{Gh25}.
+Let $[x]$ denote the physical dimension of a state variable and let $T$ denote the dimension of time.
+The ordinary and fractional derivatives then satisfy
+\[
+\left[\frac{dx}{dt}\right]=[x]T^{-1},
+\qquad
+\left[{}_{0}^{C}\!D_t^{\alpha}x\right]=[x]T^{-\alpha},
+\qquad 0<\alpha<1.
+\]
+Consequently, replacing $d/dt$ by ${}_{0}^{C}\!D_t^{\alpha}$ while leaving every rate parameter unchanged generally destroys dimensional homogeneity.
+For example, consider the formal equation
+\[
+{}_{0}^{C}\!D_t^{\alpha}I(t)
+=\beta S(t)I(t)-\gamma I(t),
+\]
+where $S$ and $I$ are dimensionless population proportions.
+The left-hand side has dimension $T^{-\alpha}$, while the conventional transmission and recovery rates on the right-hand side have dimension $T^{-1}$.
+The equation cannot be interpreted consistently unless the coefficients are reformulated or an additional time scale is introduced.
+
+There are several possible responses to this mismatch, but they do not have identical interpretations.
+One common convention is to replace every classical rate $q$ by a coefficient $q_{\alpha}$ having dimension $T^{-\alpha}$.
+This may be written suggestively as
+\[
+q_{\alpha}=q_*^{\alpha},
+\qquad [q_*]=T^{-1},
+\]
+so that $[q_{\alpha}]=T^{-\alpha}$.
+Another possibility is to retain the classical vector field and introduce an explicit reference time $\tau$:
+\[
+{}_{0}^{C}\!D_t^{\alpha}x(t)
+=\tau^{1-\alpha}F(x(t);q),
+\qquad [F]=[x]T^{-1}.
+\]
+The factor $\tau^{1-\alpha}$ restores the required dimension, but it also adds a characteristic time scale whose origin must be explained.
+A third and conceptually stronger approach is to derive the fractional equation from a stochastic waiting-time law, an age-structured model, or another mechanism and allow that derivation to determine the coefficients.
+
+Formal consistency alone does not decide which correction should be used.
+In a classical model, $1/\gamma$ is often interpreted as a mean infectious period because the corresponding exponential waiting time has mean $1/\gamma$.
+In a fractional model, the waiting-time distribution is generally not exponential, and its mean may differ from $1/\gamma_*$ or may fail to be finite under an ideal power-law assumption.
+The adjusted coefficient should therefore not be called the same recovery rate merely because the same Greek letter is retained.
+The distinction is especially important when numerical values are transferred from an integer-order model.
+
+This issue becomes more serious when authors import numerical parameter values from an integer-order model and raise them to a fractional power without recalibration.
+The operation may correct units symbolically, yet the resulting value has not necessarily been estimated for the new model or connected to an observable duration.
+Conversely, fitting all adjusted rates anew may improve agreement with data but weakens direct comparison with the original parameter meanings.
+Dimensional consistency is thus necessary but not sufficient: a credible model must explain both why its units balance and how its coefficients relate to measurable epidemiological quantities.
+
+The same concern applies to threshold quantities.
+For an ordinary compartmental model, a basic reproduction number is dimensionless because it compares rates with the same temporal dimension.
+If a fractional model combines a classical rate with a coefficient of dimension $T^{-\alpha}$, an expression that resembles the classical reproduction number may retain a residual power of time.
+It can no longer be interpreted as an expected number of secondary cases until the units have been reconciled.
+Therefore, preserving the visual form of a familiar formula is not sufficient; its dimensional and probabilistic meanings must also be preserved or rederived.
+
+The choice of fractional operator also matters.
+Different operators have different kernels and mathematical structures, and not every proposed derivative has an equally clear dimensional interpretation.
+Changing from a Caputo derivative to a nonsingular-kernel or time-transformed derivative is not a neutral computational choice.
+It changes how the past is weighted and may introduce additional scales or parameters.
+Ghosh argues particularly strongly that operators whose dimensions are not well defined should not be inserted into ecological or epidemiological balance laws solely because they produce convenient numerical behavior.
+Even where an operator is mathematically well defined, a model should state the dimensions of the operator and every coefficient before comparing its numerical fit with alternatives.
+
+These considerations suggest a practical reporting standard.
+Authors should provide a table of units for all states, coefficients, and fractional operators; distinguish classical rates from fractional coefficients typographically; and state whether the parameters were transformed, independently estimated, or derived from a mechanism.
+Without this information, the numerical solution may be reproducible while its epidemiological interpretation remains ambiguous.
+
+\subsection{Does fractionalization represent biological memory?}
+
+The modeling status of direct fractionalization is examined critically in \cite{Cu26}.
+The nonlocality of a time-fractional derivative means that the present derivative depends mathematically on a weighted history of the state.
+This property is often summarized by saying that the model has memory.
+Nevertheless, mathematical nonlocality does not identify what biological information is remembered, which individuals carry that information, or why the history should be weighted by a particular kernel.
+
+For $0<\alpha<1$, the Caputo derivative is
+\[
+{}_{0}^{C}\!D_t^{\alpha}x(t)
+=\frac{1}{\Gamma(1-\alpha)}
+\int_{0}^{t}(t-s)^{-\alpha}x'(s)\,ds.
+\]
+This expression makes the nonlocality explicit.
+The value at time $t$ depends on changes $x'(s)$ throughout the interval from the lower terminal $0$ to the present.
+The power-law factor $(t-s)^{-\alpha}$ assigns greater weight to recent changes but does not impose a finite cut-off on older changes.
+Equivalently, the initial-value problem
+\[
+{}_{0}^{C}\!D_t^{\alpha}x(t)=f(x(t)),
+\qquad x(0)=x_0,
+\]
+can be written as the Volterra integral equation
+\[
+x(t)=x_0+
+\frac{1}{\Gamma(\alpha)}
+\int_{0}^{t}(t-s)^{\alpha-1}f(x(s))\,ds.
+\]
+Thus, fractionalization replaces a local rate of change by an accumulated history with a prescribed kernel.
+
+The common procedure
+\[
+\frac{d}{dt}x(t)=f(x(t))
+\quad\longrightarrow\quad
+{}_{0}^{C}\!D_t^{\alpha}x(t)=f(x(t))
+\]
+therefore requires more justification than the observation that the second equation contains an integral over the past.
+In an epidemic, temporal dependence might arise from heterogeneous infectious periods, immunity waning with infection age, delayed behavioral responses, reporting processes, changing interventions, or seasonal transmission.
+These mechanisms are not equivalent, and a single fitted value of $\alpha$ does not distinguish among them.
+
+The memory kernel is itself a modeling assumption.
+For the Caputo derivative, the power-law kernel gives slowly decaying influence to the past and, in its standard form, has no finite memory horizon.
+Such persistence may be reasonable for some processes but implausible for others.
+For comparison, a distributed-delay model may represent a specific history-dependent mechanism through
+\[
+\frac{dx}{dt}
+=F\!\left(x(t),
+\int_{0}^{\infty}K(s)x(t-s)\,ds\right),
+\qquad
+\int_{0}^{\infty}K(s)\,ds=1.
+\]
+Here $K(s)$ can be chosen or estimated as a distribution of biologically meaningful delays, such as the duration of immunity or the time between infection and behavioral response.
+An infection-age model can go further by tracking the time elapsed since infection explicitly.
+These alternatives may require more state information, but they also make the object carrying the memory easier to identify.
+If transmission changes because of policy or seasonality, a time-dependent coefficient may be more interpretable than attributing the same pattern to fractional memory.
+
+The lower terminal of the fractional derivative is another substantive assumption.
+Writing ${}_{0}^{C}\!D_t^{\alpha}$ declares that the relevant memory begins at $t=0$.
+In applications, however, $t=0$ is often merely the first observation date rather than the biological beginning of the epidemic.
+Unobserved infections, immunity, and interventions before that date can affect the subsequent trajectory.
+Changing the lower terminal or prescribing a pre-observation history may therefore alter the fitted fractional order.
+This dependence should be examined rather than hidden inside an arbitrary choice of initial time.
+
+This distinction also changes how better data fitting should be interpreted.
+An FDE can fit a trajectory better because the fractional order provides an additional shape parameter.
+The improvement shows that the classical model lacks some temporal flexibility, but it does not demonstrate that the proposed biological system truly follows a fractional memory law.
+A mechanistic claim requires an independent argument connecting the kernel to waiting times, hidden population structure, random operational time, or another observable process.
+
+The language used to describe the result should match the strength of this evidence.
+It is reasonable to state that a Caputo model incorporates power-law-weighted historical dependence.
+It is stronger, and often unjustified, to state that a population possesses memory of order $\alpha$.
+The latter wording turns a mathematical parameter into a biological attribute without identifying a carrier or measurement procedure.
+A defensible interpretation should specify the mechanism, the affected transition, and the empirical observation that could distinguish the proposed memory from ordinary heterogeneity or time-varying forcing.
+
+The construction studied in Chapter~3 is stronger than a purely formal derivative replacement because it relates the Caputo SEIR equations to a fractional stochastic process.
+Even there, the derivation establishes mathematical compatibility with a random-time mechanism rather than proving that this mechanism generates the observed measles data.
+The distinction between a possible stochastic foundation and a validated biological explanation should remain explicit.
+
+Accordingly, fractionalization is most convincing when it is applied selectively rather than automatically to every compartment equation.
+Different epidemic transitions need not share the same waiting-time law.
+Latent progression, recovery, loss of immunity, and behavioral response may operate on different time scales and may require different forms of history dependence.
+A model that uses one common order for all equations gains parsimony, but it should acknowledge that this is a restrictive biological assumption rather than a mathematical necessity.
+
+\subsection{Identifiability, estimation, and evidential standards}
+
+The estimation difficulties created by generalized fractional epidemic models are emphasized in \cite{Ci26}.
+Adding a fractional order, a tempering parameter, a nonlinear time transformation, or explicit delays may allow a model to reproduce many temporal patterns.
+The same flexibility can make the inverse problem ill posed because different combinations of memory and epidemiological parameters may generate nearly indistinguishable trajectories.
+
+An instructive example is the $g$-tempered Caputo derivative considered in that study:
+\[
+({}^{C}\mathcal{D}_{a,g}^{\alpha,\lambda}x)(t)
+=\frac{1}{\Gamma(1-\alpha)}
+\int_a^t
+(g(t)-g(s))^{-\alpha}
+e^{-\lambda(g(t)-g(s))}
+\frac{dx(s)}{dg(s)}\,dg(s).
+\]
+The order $\alpha$ controls the power-law part of the memory, the tempering parameter $\lambda$ suppresses very long memory exponentially, and the increasing function $g$ transforms the effective clock of the process.
+Setting $\lambda=0$ gives a Caputo derivative with respect to $g$, while choosing $g(t)=t$ gives the usual tempered Caputo derivative.
+With both $\lambda=0$ and $g(t)=t$, the standard Caputo derivative is recovered.
+These limiting cases are useful because they show that a generalized operator contains several simpler models, but they also reveal how many mechanisms can compensate for one another during estimation.
+
+For example, a change in $\alpha$ may be offset by changes in transmission, progression, recovery, or initial conditions.
+In more general models, the effects of fractional order and kernel tempering may be strongly correlated.
+A numerical optimizer can then return one apparently precise parameter vector even though a broad valley of alternatives gives almost the same objective value.
+The existence of a best-fitting point is not evidence that every component of that point is identifiable.
+
+To see the distinction, suppose observations satisfy
+\[
+y_k=H(x(t_k;\theta))+\varepsilon_k,
+\]
+where $H$ maps the model states to reported data and $\theta$ contains epidemic rates, initial conditions, and memory parameters.
+A typical estimate minimizes an objective of the form
+\[
+\mathcal{L}(\theta)
+=\sum_{k=1}^{n}
+\left\|H(x(t_k;\theta))-y_k\right\|^2
++\rho\left\|\theta-\theta_0\right\|^2.
+\]
+The first term measures fit to the observations, while the second is a representative regularization term that discourages implausible or unstable parameter values.
+Regularization can select a stable estimate from an ill-conditioned problem, but it does not create information that is absent from the data.
+The answer may depend substantially on the chosen penalty strength $\rho$ and reference value $\theta_0$.
+
+Local identifiability can be investigated through the sensitivity matrix
+\[
+J_{kj}(\theta)
+=\frac{\partial H(x(t_k;\theta))}{\partial\theta_j}.
+\]
+If two columns of $J$ are nearly proportional, the corresponding parameters produce similar changes in the observable trajectory.
+For instance, a lower fractional order may slow the response in a way that resembles a lower progression or recovery coefficient.
+Tempering may shorten the effective memory in a way that resembles a change in the time transformation $g$.
+Sparse incidence data may therefore be insufficient to identify all of these quantities simultaneously, even if the forward equations have a unique solution.
+
+This problem cannot be resolved by reporting a low residual error alone.
+At minimum, parameter uncertainty, sensitivity, correlations, and residual structure should be examined.
+Profile likelihoods, bootstrap procedures, or posterior distributions can reveal whether $\alpha$ is genuinely constrained by the data.
+Results should also be tested against different initial values, observation intervals, numerical discretizations, and plausible alternative model structures.
+If the inferred fractional order changes substantially under these choices, its biological interpretation is weak even when the fitted curve looks convincing.
+
+Observation models also deserve explicit attention.
+Compartmental states such as $I(t)$ are rarely observed without error; available data may instead be delayed, under-reported case counts aggregated over days or weeks.
+Treating reported incidence as if it were the instantaneous number of infectious individuals can force the fractional operator to absorb discrepancies created by measurement and reporting.
+The map $H$ and the error model for $\varepsilon_k$ are therefore part of the scientific model, not merely technical details of curve fitting.
+
+Model comparison must also account for complexity.
+Information criteria such as AIC and BIC penalize additional parameters, but they do not by themselves establish predictive usefulness or mechanistic validity.
+Whenever possible, an FDE should be evaluated on data not used for fitting and compared with simpler alternatives such as time-varying ODEs, delay equations, distributed-delay models, or stochastic compartmental models.
+The appropriate question is not whether a sufficiently flexible fractional model can fit historical observations, but whether it yields a stable and practically relevant improvement over credible alternatives.
+
+A convincing empirical analysis should consequently compare nested limits of the fractional model as well as structurally different competitors.
+For the generalized operator above, the data should be tested for evidence supporting $\lambda>0$, a nonlinear $g$, and $\alpha<1$ separately, instead of assuming that all three extensions are necessary.
+Out-of-sample forecasts, rolling-origin validation, or prediction of a different epidemic wave can reveal whether the additional parameters capture persistent structure or merely accommodate one historical curve.
+Parameter recovery from synthetic data is also valuable because it tests whether the proposed observations could identify known values under realistic noise and sampling frequencies.
+
+The evidential standard should rise with model complexity.
+A fractional epidemic model is most persuasive when its equations are dimensionally coherent, its kernel follows from an explicit modeling assumption, its parameters are identifiable with quantified uncertainty, and its advantage persists in prediction rather than only in calibration.
+Failure at any one of these levels does not make fractional calculus mathematically invalid.
+It limits the strength of the biological and epidemiological claims that can be drawn from the model.
+
+Taken together, these criticisms support neither automatic rejection nor automatic adoption of fractional epidemic models.
+They instead suggest a disciplined order of justification: first establish dimensional consistency, then explain the memory mechanism, and finally determine whether the additional structure is supported by data.
+Fractionalization should be treated as a substantive modeling decision rather than a routine replacement of derivatives.
+
+\ifSubfilesClassLoaded{\printbibliography}{}
+
 \end{document}
