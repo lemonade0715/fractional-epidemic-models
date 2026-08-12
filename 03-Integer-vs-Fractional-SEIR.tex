@@ -1,0 +1,224 @@
+% !TeX root = 00-main.tex
+\documentclass[00-main.tex]{subfiles}
+
+\begin{document}
+
+% Temporary source notes for drafting; remove these together with their uses later.
+\providecommand{\sourcenote}[1]{\textcolor{red}{\footnotesize\,(Source: \cite{Is20}, #1)}}
+
+\section{A Comparison of Integer- and Fractional-Order SEIR Models}
+
+This section examines what is gained, both mathematically and empirically, by replacing an integer-order epidemic model with a fractional-order one.
+The study in \cite{Is20} compares ordinary and Caputo fractional SEIR systems, derives both as mean-field descriptions of stochastic processes, and tests them against three measles epidemics from the pre-vaccination era.
+It therefore provides a useful setting in which the choice of derivative can be examined without changing the underlying compartmental structure.
+The discussion below retains the construction, comparison method, and principal results, while reporting only the conclusions of the lengthy equilibrium calculations.
+
+
+\subsection{Integer- and fractional-order SEIR models}
+
+Let $S(t)$, $E(t)$, $I(t)$, and $R(t)$ denote the proportions of susceptible, exposed, infectious, and recovered individuals, respectively, so that
+\[
+S(t)+E(t)+I(t)+R(t)=1.
+\]
+The initial conditions satisfy
+\[
+S(0),E(0),I(0),R(0)\geq0,
+\qquad
+S(0)+E(0)+I(0)+R(0)=1.
+\]
+Because the state variables are population proportions rather than population counts, the mass-action incidence is written as $\beta SI$; no additional division by the total population $N$ is required.
+
+The parameter $\mu$ is the per-capita birth and natural death rate, $\beta$ is the transmission rate, $\delta$ is the rate at which exposed individuals become infectious, and $\sigma$ is the recovery rate.
+Recruitment balances natural mortality because the population is assumed constant.
+Infection transfers individuals from $S$ to $E$ at rate $\beta SI$, while $\delta^{-1}$ and $\sigma^{-1}$ describe the mean latent and infectious time scales in the classical formulation.
+The resulting compartmental structure is displayed in Figure~\ref{fig:ch3-seir-flow}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=2.3cm,
+  compartment/.style={circle,draw,thick,minimum size=10mm,fill=blue!7},
+  flow/.style={-{Stealth[length=2mm]},thick},
+  loss/.style={-{Stealth[length=1.8mm]},thin},
+  every edge quotes/.style={font=\scriptsize,inner sep=1pt}
+]
+\node[compartment] (S) {$S$};
+\node[compartment,right=of S] (E) {$E$};
+\node[compartment,right=of E] (I) {$I$};
+\node[compartment,right=of I] (R) {$R$};
+\coordinate[left=1.0cm of S] (birth);
+
+\draw[flow] (birth) -- node[above,font=\scriptsize] {$\mu$} (S.west);
+\draw[flow] (S) -- node[above,font=\scriptsize] {$\beta SI$} (E);
+\draw[flow] (E) -- node[above,font=\scriptsize] {$\delta E$} (I);
+\draw[flow] (I) -- node[above,font=\scriptsize] {$\sigma I$} (R);
+\foreach \x in {S,E,I,R}{
+  \draw[loss] (\x.south) -- ++(0,-0.75) node[below,font=\scriptsize] {$\mu \x$};
+}
+\end{tikzpicture}
+\caption{Compartmental structure of the normalized SEIR model used in Chapter~3.}
+\label{fig:ch3-seir-flow}
+\end{figure}
+
+The deterministic model is
+\begin{equation}
+\label{eq:ch3-classical-seir}
+\left\{
+\begin{aligned}
+\frac{dS}{dt} &= \mu-\beta SI-\mu S,\\[3pt]
+\frac{dE}{dt} &= \beta SI-(\mu+\delta)E,\\[3pt]
+\frac{dI}{dt} &= \delta E-(\mu+\sigma)I,\\[3pt]
+\frac{dR}{dt} &= \sigma I-\mu R.
+\end{aligned}
+\right.
+\end{equation}
+All four parameters in \eqref{eq:ch3-classical-seir} have units of inverse time.
+The last equation is redundant once $R=1-(S+E+I)$ is imposed, but it is retained to display the complete SEIR flow.
+The transmission coefficient $\beta$ is treated as a constant in this formulation.
+Thus, although measles epidemics may exhibit seasonal transmission, seasonality is not represented through a time-dependent coefficient $\beta(t)$ in the model considered here.
+This restriction keeps the compartmental structure fixed and allows the comparison to focus on the choice between integer- and fractional-order temporal operators.
+
+The fractional formulation uses Caputo derivatives of a common order $0<\alpha\leq1$.
+The same value of $\alpha$ is used in all four equations, so this is a commensurate fractional-order system rather than a model with a separate derivative order for each compartment.
+Because ${}_{0}^{C}\!D_t^{\alpha}$ has dimension $\mathrm{time}^{-\alpha}$, every term on the right-hand side of the fractional system must have the same dimension. Consequently, the coefficients obtained directly from the fractional stochastic process, denoted generically by $q$, have dimension
+\[
+[q]=\mathrm{time}^{-\alpha}.
+\]
+Such a coefficient cannot be interpreted immediately as an ordinary epidemiological rate, whose conventional dimension is $\mathrm{time}^{-1}$.
+To retain that familiar interpretation, the paper introduces a new parameter $q_*$ satisfying
+\[
+q=q_*^{\alpha},
+\qquad
+[q_*]=\mathrm{time}^{-1}.
+\]
+It follows that $[q_*^{\alpha}]=\mathrm{time}^{-\alpha}$, as required by the fractional equation.
+The subscript $*$ is only a label for this reparameterized rate; it does not denote multiplication, an optimal value, or an estimated value.
+Applying this convention to the four epidemic rates gives $\mu_*^{\alpha}$, $\beta_*^{\alpha}$, $\delta_*^{\alpha}$, and $\sigma_*^{\alpha}$.
+\begin{equation}
+\label{eq:ch3-fractional-seir}
+\left\{
+\begin{aligned}
+{}_{0}^{C}\!D_t^{\alpha}S &= \mu_*^{\alpha}-\beta_*^{\alpha}SI-\mu_*^{\alpha}S,\\[3pt]
+{}_{0}^{C}\!D_t^{\alpha}E &= \beta_*^{\alpha}SI-(\mu_*^{\alpha}+\delta_*^{\alpha})E,\\[3pt]
+{}_{0}^{C}\!D_t^{\alpha}I &= \delta_*^{\alpha}E-(\mu_*^{\alpha}+\sigma_*^{\alpha})I,\\[3pt]
+{}_{0}^{C}\!D_t^{\alpha}R &= \sigma_*^{\alpha}I-\mu_*^{\alpha}R.
+\end{aligned}
+\right.
+\end{equation}
+When $\alpha=1$, one has $q=q_*$.
+At the same time, the Caputo derivative becomes the ordinary first derivative, so both the equations and their rate dimensions reduce to those of the classical model.
+Hence the comparison is nested, with the classical system appearing as a special case.
+For $0<\alpha<1$, however, the fitted starred parameters should not be identified directly with the fitted rates of the classical ODE. They belong to different parameterizations and coincide in the above reduction only when $\alpha=1$.
+
+Directly comparing \eqref{eq:ch3-classical-seir} and \eqref{eq:ch3-fractional-seir} changes two features simultaneously: the differentiation operator and the parameter values.
+To isolate these effects, an auxiliary $\alpha$-dependent ODE is introduced:
+\begin{equation}
+\label{eq:ch3-alpha-ode}
+\left\{
+\begin{aligned}
+\frac{dS}{dt} &= \mu_*^{\alpha}-\beta_*^{\alpha}SI-\mu_*^{\alpha}S,\\[3pt]
+\frac{dE}{dt} &= \beta_*^{\alpha}SI-(\mu_*^{\alpha}+\delta_*^{\alpha})E,\\[3pt]
+\frac{dI}{dt} &= \delta_*^{\alpha}E-(\mu_*^{\alpha}+\sigma_*^{\alpha})I,\\[3pt]
+\frac{dR}{dt} &= \sigma_*^{\alpha}I-\mu_*^{\alpha}R.
+\end{aligned}
+\right.
+\end{equation}
+Here the fitted value of $\alpha$ from the FDE is inserted into the coefficients, while the left-hand side remains integer order.
+This system is a comparison device rather than a new mechanistic model: comparing it with the FDE holds the coefficients fixed and reveals the effect of the fractional clock itself.
+There is also a dimensional caveat. The ordinary derivative on the left-hand side has dimension $\mathrm{time}^{-1}$, whereas the inherited coefficients $q_*^{\alpha}$ have dimension $\mathrm{time}^{-\alpha}$. Therefore, the auxiliary system should be understood only as the numerical analogue introduced in the original comparison, not as a separate dimensionally self-contained epidemiological model.
+
+
+\subsection{Stochastic interpretation of the fractional model}
+
+A common criticism of fractional epidemic models is that an ordinary derivative may simply be replaced by a fractional derivative without identifying a mechanism that produces it. The construction in \cite{Is20} instead begins with the numbers of susceptible, exposed, and infectious individuals as discrete random variables. Birth, infection, progression, recovery, and natural death determine the transition intensities of a stochastic SEIR birth-and-death process; the recovered population follows from conservation of the total population. \sourcenote{Section 2.2}
+
+Let $\boldsymbol{X}^{(\alpha)}(t)$ denote the fractional stochastic SEIR process and $\boldsymbol{X}^{(1)}(t)$ its classical counterpart. The principal stochastic result may be summarized as
+\[
+\boldsymbol{X}^{(\alpha)}(t)
+\overset{d}{=}
+\boldsymbol{X}^{(1)}\!\left(T_{2\alpha}(t)\right),
+\]
+where $T_{2\alpha}(t)$ is a random operational time and $\overset{d}{=}$ denotes equality in distribution. Thus, the fractional process can be viewed as the classical process observed on a randomized clock. When $\alpha=1$ the construction returns the ordinary stochastic process, whereas $0<\alpha<1$ alters its waiting-time structure. \sourcenote{Section 2.2, Theorem 1}
+
+The deterministic fractional model is obtained by differentiating the probability-generating function to derive equations for the expected compartment sizes. With $N$ denoting the constant population, the normalized means are defined by
+\[
+S^{(\alpha)}(t)=\frac{1}{N}\mathbb{E}\!\left[X_1^{(\alpha)}(t)\right],\qquad
+E^{(\alpha)}(t)=\frac{1}{N}\mathbb{E}\!\left[X_2^{(\alpha)}(t)\right],\qquad
+I^{(\alpha)}(t)=\frac{1}{N}\mathbb{E}\!\left[X_3^{(\alpha)}(t)\right].
+\]
+The moment equations are not closed because infection contains a product of susceptible and infectious counts. Applying the mean-field closure
+\[
+\mathbb{E}\!\left[X_1^{(\alpha)}X_3^{(\alpha)}\right]
+\approx
+\mathbb{E}\!\left[X_1^{(\alpha)}\right]
+\mathbb{E}\!\left[X_3^{(\alpha)}\right]
+\]
+closes the system and produces the deterministic Caputo equations in \eqref{eq:ch3-fractional-seir}. The FDE is therefore an approximation to the means of the fractional stochastic process, just as a classical ODE is commonly interpreted as a mean-field approximation of an integer-order stochastic process. \sourcenote{Sections 2.2--2.3, Equations (11)--(13)}
+
+This derivation does not imply that all randomness has disappeared from the underlying epidemic. Rather, it explains the deterministic fractional system as a population-level approximation and gives the fractional derivative a probabilistic origin. The full fractional Kolmogorov equations and generating-function calculation are omitted here because the present goal is comparison, but the sequence from stochastic transitions to moment equations and then to mean-field closure is essential to the interpretation.
+
+\subsection{Dynamical and empirical comparison}
+
+The analysis first shows that the biologically feasible simplex is positively invariant, so nonnegative initial proportions remain nonnegative and their sum does not exceed one. It then identifies a disease-free equilibrium and, when the basic reproduction number exceeds one, an endemic equilibrium. The local threshold conclusions agree with those of the corresponding ODE: the disease-free state is stable below the threshold, while the endemic state is relevant above it. The detailed Jacobian, eigenvalue, and Routh--Hurwitz calculations are not repeated here because they do not constitute the main difference between the two models. \sourcenote{Section 2.6 and Appendix A}
+
+This shared equilibrium structure is an important negative result for the comparison. Fractionalization does not create a new disease-free state or a different invasion threshold in this model. Its most visible contribution lies instead in how the solution approaches its long-term behavior, especially during finite-time epidemic waves and damped oscillations. \sourcenote{Sections 2.6--3}
+
+The numerical procedure approximates the FDE through a deterministic time-subordination relation and solves the associated ODE numerically. These simulations show continuously how the fractional solution approaches the classical ODE solution as $\alpha\to1$. With the parameters used in the study, decreasing $\alpha$ produces a higher epidemic peak and a shorter initial outbreak. This observation should be understood as a result of the particular fitted model and parameterization, rather than as a universal monotonic law for every fractional epidemic system. \sourcenote{Section 2.7, Algorithm 1; Section 3, Figure 2}
+
+The comparison with \eqref{eq:ch3-alpha-ode} is especially informative. Holding the $\alpha$-dependent coefficients fixed, the FDE and auxiliary ODE display similar numbers and amplitudes of transient peaks, but the peaks occur at different times. The fractional oscillations are stretched over a longer time scale and consequently have longer inter-epidemic periods. Both systems eventually approach the same equilibrium, reinforcing the distinction between transient and asymptotic effects. \sourcenote{Section 3, Figures 3--4}
+
+\begin{figure}[H]
+\centering
+\fbox{\begin{minipage}[c][4.2cm][c]{0.86\textwidth}
+\centering
+\textbf{Figure placeholder}\\[6pt]
+Insert Figure 2 from \cite{Is20}.\\
+Classical ODE and fractional SEIR simulations for different values of $\alpha$.
+\end{minipage}}
+\caption{Effect of the fractional order on the simulated measles epidemic. Placeholder for Figure~2 of \cite{Is20}.}
+\label{fig:ch3-original-fig2}
+\end{figure}
+
+Figure~\ref{fig:ch3-original-fig2} is intended to illustrate the sensitivity of the epidemic trajectory to the fractional order. To distinguish that effect from the rescaling of the parameters, the original study further compares the FDE with the auxiliary $\alpha$-dependent ODE, as indicated in Figure~\ref{fig:ch3-original-fig3}. \sourcenote{Section 3, Figures 2--3}
+
+\begin{figure}[H]
+\centering
+\fbox{\begin{minipage}[c][4.2cm][c]{0.86\textwidth}
+\centering
+\textbf{Figure placeholder}\\[6pt]
+Insert Figure 3 from \cite{Is20}.\\
+Fractional SEIR simulations and their $\alpha$-dependent ODE analogues.
+\end{minipage}}
+\caption{Comparison of the FDE and the corresponding $\alpha$-dependent ODE. Placeholder for Figure~3 of \cite{Is20}.}
+\label{fig:ch3-original-fig3}
+\end{figure}
+
+The empirical comparison fits the ODE and FDE models by ordinary least squares, minimizing the squared difference between reported and simulated infectious cases. The constrained nonlinear optimization is performed with MATLAB's MultiStart and \texttt{fmincon} routines. Because the FDE contains the additional order parameter $\alpha$, the comparison is not based on the residual sum of squares alone; the Akaike and Bayesian information criteria are also reported to penalize unnecessary model complexity. \sourcenote{Section 2.8}
+
+Three pre-vaccination measles series are used: monthly reports from New York, biweekly reports from London, and biweekly reports from Portsmouth. The fitted orders for New York and London differ from one only at approximately the ninth decimal place, and their ODE and FDE fits are consequently almost indistinguishable. For Portsmouth, the fitted order is appreciably below one and the FDE performs better. Even there, the improvement must be evaluated against the additional parameter and computational effort rather than inferred merely from the greater flexibility of the model. \sourcenote{Section 3, Figure 5 and Table 1; Appendix B}
+
+\begin{figure}[H]
+\centering
+\fbox{\begin{minipage}[c][4.5cm][c]{0.86\textwidth}
+\centering
+\textbf{Figure placeholder}\\[6pt]
+Insert Figure 5 from \cite{Is20}.\\
+ODE and FDE fits to the New York, London, and Portsmouth measles data.
+\end{minipage}}
+\caption{Comparison of integer- and fractional-order fits to three pre-vaccination measles epidemics. Placeholder for Figure~5 of \cite{Is20}.}
+\label{fig:ch3-original-fig5}
+\end{figure}
+
+Figure~\ref{fig:ch3-original-fig5} summarizes the central empirical result: the additional fractional order does not automatically improve a model. In two of the three data sets, the estimation procedure effectively selects the classical model by returning $\alpha\approx1$; a visible advantage appears only for the Portsmouth data. \sourcenote{Section 3, Figure 5}
+
+\subsection{Assessment of fractionalization}
+
+The comparison leads to a qualified view of fractionalization. The parameter $\alpha$ gives the model additional freedom to modify epidemic peaks, transient oscillations, and inter-epidemic timing. Moreover, the stochastic construction supplies a mathematical interpretation for the Caputo system and relates it to a random-time version of a classical stochastic process. These are genuine advantages when the observed epidemic contains temporal patterns that cannot be represented adequately by the classical model. \sourcenote{Section 4}
+
+Nevertheless, the fractional formulation introduces an additional parameter, more difficult numerical calculations, longer fitting procedures, and a less immediate interpretation of the adjusted rate constants. The empirical results show that these costs are not always compensated by a better fit: two of the three fitted FDEs converge numerically to their ODE counterparts. The original discussion therefore recommends fractional modeling most cautiously in settings with large, refined data sets and suitable numerical algorithms. \sourcenote{Section 4}
+
+For the purpose of this study, the central lesson is not that memory should be added to every epidemic model. Rather, the estimated value of $\alpha$ and the improvement in goodness of fit should be treated as evidence that must justify the additional structure. A value appreciably below one is meaningful only when it is supported by identifiable data and accompanied by a practically relevant improvement in the epidemic features of interest.
+
+\ifSubfilesClassLoaded{\printbibliography}{}
+
+\end{document}
